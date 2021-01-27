@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: api
+  profiles:
+    active: online
+server:
+  port: 8000
+  tomcat:
+    max-connections: 2000
+    threads:
+      max: 800
+      min-spare: 10
+  servlet:
+    context-path: /v1/smart-im
+logging:
+  config: classpath:logback-spring.xml
+kafka:
+  smart-im:
+    bootstrap-server: 10.211.163.123:9092
+redis:
+  smart-im:
+    jedis-pool-config:
+      minIdle: 5
+      maxIdle: 10
+      maxTotal: 10
+      maxWaitMillis: 1000
+      minEvictableIdleTimeMillis: 9000
+      timeBetweenEvictionRunsMillis: 6000
+    jedis-config:
+      host: 10.211.163.123
+      port: 6379
+      timeout: 2000
