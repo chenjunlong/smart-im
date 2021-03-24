@@ -1,7 +1,7 @@
 package com.smart.api.web.controller;
 
-import com.google.gson.Gson;
 import com.smart.auth.annotation.BaseInfo;
+import com.smart.auth.annotation.RequestLog;
 import com.smart.service.biz.ConnectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -20,8 +20,6 @@ import java.util.Set;
 @RequestMapping("/dispatch")
 public class DispatchController {
 
-    private static final Gson gson = new Gson();
-
     @Resource
     private ConnectService connectService;
 
@@ -29,11 +27,11 @@ public class DispatchController {
     /**
      * curl 'http://localhost:8000/v1/smart-im/dispatch/connect_address'
      */
+    @RequestLog
     @BaseInfo(desc = "获取Tcp服务地址", needAuth = true)
     @GetMapping(value = "/connect_address", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String connectAddress() {
-        Set<String> connectAddress = connectService.getConnectAddress();
-        return gson.toJson(connectAddress);
+    public Set<String> connectAddress() {
+        return connectService.getConnectAddress();
     }
 
 }

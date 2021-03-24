@@ -3,6 +3,7 @@ package com.smart.api.web.controller;
 
 import com.smart.auth.annotation.BaseInfo;
 import com.smart.auth.annotation.ParamDesc;
+import com.smart.auth.annotation.RequestLog;
 import com.smart.service.biz.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -26,8 +27,9 @@ public class MessageController {
 
 
     /**
-     * curl -d 'uid=1001&room_id=roomId001&content=test message' 'http://localhost:8000/v1/smart-im/message/send'
+     * curl -d 'uid=1001&room_id=room1001&content=test message' 'http://localhost:8000/v1/smart-im/message/send'
      */
+    @RequestLog
     @BaseInfo(desc = "发送IM消息", needAuth = true)
     @PostMapping(value = "/send", produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean send(@RequestParam("uid") @ParamDesc(desc = "发送者uid") long uid,

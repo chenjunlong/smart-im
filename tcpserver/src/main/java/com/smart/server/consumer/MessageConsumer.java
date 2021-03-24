@@ -3,7 +3,9 @@ package com.smart.server.consumer;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
 import com.smart.server.common.constant.Constant;
+import com.smart.server.model.CmdEnum;
 import com.smart.server.tcp.channel.ChannelRegistry;
+import com.smart.server.tcp.codec.CodecObject;
 import com.smart.service.common.kafka.Topic;
 import com.smart.service.common.model.Message;
 import io.netty.channel.Channel;
@@ -24,8 +26,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class MessageConsumer extends BaseConsumer<String, String> {
-
-    private static final Gson gson = new Gson();
 
     private static final ExecutorService pool =
             new ThreadPoolExecutor(16, 16, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue(200), new ThreadFactoryBuilder().setNameFormat("MessageConsumerPool").build(), new ThreadPoolExecutor.CallerRunsPolicy());
@@ -76,7 +76,12 @@ public class MessageConsumer extends BaseConsumer<String, String> {
             if (channel == null) {
                 continue;
             }
-            channel.writeAndFlush(message);
+
+            CodecObject codecObject = new CodecObject();
+            codecObject.cmd = CmdEnum.RESPONSE.getCmdId();
+            codecObject.body = message.toJson().getBytes();
+
+            channel.writeAndFlush(codecObject);
         }
     }
 

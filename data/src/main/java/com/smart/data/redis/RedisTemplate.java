@@ -37,6 +37,7 @@ public class RedisTemplate implements JedisCommands {
 
     private final JedisPool jedisPool;
     private int retryCount = 3;
+    private boolean throwException = false;
 
     public RedisTemplate(JedisPool jedisPool) {
         this.jedisPool = jedisPool;
@@ -45,6 +46,12 @@ public class RedisTemplate implements JedisCommands {
     public RedisTemplate(JedisPool jedisPool, int retryCount) {
         this.jedisPool = jedisPool;
         this.retryCount = retryCount;
+    }
+
+    public RedisTemplate(JedisPool jedisPool, int retryCount, boolean throwException) {
+        this.jedisPool = jedisPool;
+        this.retryCount = retryCount;
+        this.throwException = throwException;
     }
 
     public <T> T execute(RedisCallback action) {
@@ -69,7 +76,10 @@ public class RedisTemplate implements JedisCommands {
         try {
             result = action.doInRedis(jedis);
         } catch (Exception e) {
-            throw new JedisDataException(e);
+            if (throwException) {
+                throw new JedisDataException(e);
+            }
+            return null;
         } finally {
             jedis.close();
         }

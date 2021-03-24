@@ -56,10 +56,16 @@ public class ChannelRegistry {
      * @param channel 连接
      */
     public static void remove(String roomId, Long uid, Channel channel) {
+        if (null == roomId || null == uid) {
+            return;
+        }
         ChannelAttribute.remove(channel);
         roomUser.remove(roomId, uid);
         userChannel.remove(uid, channel);
         connections.decrementAndGet();
+
+        channel.disconnect();
+        channel.close();
     }
 
     /**

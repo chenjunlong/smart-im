@@ -19,6 +19,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
+ * NettyServer：提供TCP端口和UDP端口的服务
+ *
  * @author chenjunlong
  */
 @Slf4j
@@ -85,7 +87,7 @@ public class NettyServer {
 
         this.serverBootstrap = new ServerBootstrap();
         this.serverBootstrap.group(this.bossGroup, this.workerGroup)
-                .option(ChannelOption.SO_BACKLOG, 1024)
+                .option(ChannelOption.SO_BACKLOG, 10240)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childHandler(this.channelHandler);
 

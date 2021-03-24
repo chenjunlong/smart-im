@@ -1,6 +1,6 @@
 package com.smart.server.tcp;
 
-import com.smart.server.tcp.handler.ChildChannelHandler;
+import com.smart.server.tcp.handler.ServerChannelHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -25,14 +25,14 @@ public class ServerStarter implements ApplicationListener<ApplicationReadyEvent>
 
 
     @Resource
-    private ChildChannelHandler childChannelHandler;
+    private ServerChannelHandler serverChannelHandler;
     @Resource
     private ServerRegistry serverRegistry;
 
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        NettyServer nettyServer = new NettyServer(port, bossThreads, workerThreads, childChannelHandler, serverRegistry);
+        NettyServer nettyServer = new NettyServer(port, bossThreads, workerThreads, serverChannelHandler, serverRegistry);
         nettyServer.start();
     }
 

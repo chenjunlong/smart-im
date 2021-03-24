@@ -15,11 +15,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Resource
     private PreInterceptor preInterceptor;
     @Resource
+    private RequestLogInterceptor requestLogInterceptor;
+    @Resource
     private AuthInterceptor authInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addWebRequestInterceptor(preInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(preInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(requestLogInterceptor).addPathPatterns("/**");
         registry.addInterceptor(authInterceptor).addPathPatterns("/**");
     }
 

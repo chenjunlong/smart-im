@@ -23,7 +23,7 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %X{traceId} [%15.15t] %-40.40logger{39} : %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
         </layout>
     </appender>
 
@@ -42,7 +42,7 @@
             <maxHistory>14</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %X{traceId} [%15.15t] %-40.40logger{39} : %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
         </layout>
     </appender>
 
@@ -61,10 +61,11 @@
             <maxHistory>14</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %X{traceId} [%15.15t] %-40.40logger{39} : %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
         </layout>
     </appender>
 
+    <!-- 接口请求参数 -->
     <appender name="request" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/request.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -75,7 +76,7 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m%n %X{traceId}</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m%n ,r=%X{rid}</Pattern>
         </layout>
     </appender>
 
@@ -89,7 +90,7 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39} : %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
         </layout>
     </appender>
 
@@ -103,10 +104,11 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39} : %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
         </layout>
     </appender>
 
+    <!-- 发送Kafka消息 -->
     <appender name="sendMessage" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/send_message.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -117,7 +119,7 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m%n ,r=%X{rid}</Pattern>
         </layout>
     </appender>
 

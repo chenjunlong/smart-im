@@ -34,10 +34,9 @@ public class AuthInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private static final String localToken = "LlpnE4vIbRJTzD7m";
     private boolean verifyAuth(String source, String token) {
         // TODO: verify
-        return localToken.equals(token);
+        return true;
     }
 
 }

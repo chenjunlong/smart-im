@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author chenjunlong
  */
 @SpringBootApplication(scanBasePackages = {"com.smart.api", "com.smart.service"})
-public class BootStrapApplication {
+public class WebApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BootStrapApplication.class, args);
+        SpringApplication.run(WebApplication.class, args);
     }
 }

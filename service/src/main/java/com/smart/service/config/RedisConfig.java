@@ -36,12 +36,12 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate smartImRedisTemplate(@Qualifier("smartImJedisPool") JedisPool jedisPool) {
-        return new RedisTemplate(jedisPool, 2);
+        return new RedisTemplate(jedisPool);
     }
 
 
     public static class Key {
-        public static final String TCP_SERVER_NODE_INFO_ZSET = "tcp.server.node.info";
+        public static final String TCP_SERVER_NODE_ADDRESS = "tcp.server.node.address";
     }
 }
 
