@@ -18,17 +18,20 @@ import java.util.concurrent.Future;
 @Service
 public class MessageService {
 
-    private Logger log = LoggerFactory.getLogger("sendMessage");
+    private Logger log = LoggerFactory.getLogger("send_kafka_message");
 
     @Resource(name = "smartImKafkaProducer")
     private Producer producer;
 
-    public void send(long uid, String roomId, String content) {
+    public void send(long senderId, String receiveId, int boardCast, int cmd, String content) {
         Message message = new Message();
         message.setTimestamp(System.currentTimeMillis());
-        message.setSender(uid);
-        message.setTargetRoomId(roomId);
+        message.setSenderId(senderId);
+        message.setReceiveId(receiveId);
+        message.setCmd(cmd);
+        message.setBoardCast(boardCast);
         message.setContent(content);
+
         String messageJson = message.toJson();
         Future<RecordMetadata> future = producer.send(new ProducerRecord(Topic.SMART_IM_MESSAGE, messageJson));
         try {

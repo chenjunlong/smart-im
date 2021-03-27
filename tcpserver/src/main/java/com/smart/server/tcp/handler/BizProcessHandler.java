@@ -1,6 +1,6 @@
 package com.smart.server.tcp.handler;
 
-import com.smart.server.model.CmdEnum;
+import com.smart.service.common.model.CmdEnum;
 import com.smart.server.model.ConnectRequest;
 import com.smart.server.tcp.channel.ChannelRegistry;
 import com.smart.server.tcp.codec.CodecObject;

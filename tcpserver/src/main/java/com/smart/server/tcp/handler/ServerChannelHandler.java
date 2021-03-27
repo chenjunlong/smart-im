@@ -14,9 +14,9 @@ public class ServerChannelHandler extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel ch) {
+        ch.pipeline().addLast("timeout", new ServerIdleStateHandler(30, 30, 0));
         ch.pipeline().addLast("decoder", new SmartDecoder(Integer.MAX_VALUE, 0, 4, 0, 0, true));
         ch.pipeline().addLast("encoder", new SmartEncoder());
-        ch.pipeline().addLast("timeout", new ServerIdleStateHandler(600, 120, 0));
         ch.pipeline().addLast("handler", new BizProcessHandler());
     }
 

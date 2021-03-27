@@ -1,21 +1,20 @@
 package com.smart.service.common.model;
 
 import com.google.gson.Gson;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * @author chenjunlong
  */
-@Setter
-@Getter
+@Data
 public class Message {
 
-    private long sender;
-    private String targetRoomId;
+    private long senderId;
+    private String receiveId;
+    private int boardCast;
+    private int cmd;
     private String content;
     private long timestamp;
-
 
     private static final Gson gson = new Gson();
 

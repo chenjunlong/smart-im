@@ -23,7 +23,7 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %X{traceId} [%15.15t] %-40.40logger{39} : %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
@@ -42,7 +42,7 @@
             <maxHistory>14</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %X{traceId} [%15.15t] %-40.40logger{39} : %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
@@ -61,21 +61,7 @@
             <maxHistory>14</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %X{traceId} [%15.15t] %-40.40logger{39} : %m%n</Pattern>
-        </layout>
-    </appender>
-
-    <appender name="request" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_PATH}/request.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/archive/request-%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m%n %X{traceId}</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
@@ -89,7 +75,7 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39} : %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
@@ -103,11 +89,12 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39} : %m%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
-    <logger name="com.smart.server" level="info" additivity="false">
+
+    <logger name="com.smart" level="info" additivity="false">
         <appender-ref ref="info"/>
         <appender-ref ref="warn"/>
         <appender-ref ref="error"/>

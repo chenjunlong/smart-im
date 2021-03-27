@@ -23,7 +23,7 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
@@ -42,7 +42,7 @@
             <maxHistory>14</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
@@ -61,7 +61,7 @@
             <maxHistory>14</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
@@ -76,10 +76,26 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m%n ,r=%X{rid}</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
+    <!-- 发送Kafka消息 -->
+    <appender name="send_kafka_message" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/send_message.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archive/send_message-%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m,r=%X{rid}%n</Pattern>
+        </layout>
+    </appender>
+
+    <!-- kafka -->
     <appender name="kafka" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/kafka.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -90,10 +106,11 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
+    <!-- redis -->
     <appender name="jedis" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/jedis.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -104,27 +121,12 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%15.15t] %-40.40logger{39}: %m%n ,r=%X{rid}</Pattern>
-        </layout>
-    </appender>
-
-    <!-- 发送Kafka消息 -->
-    <appender name="sendMessage" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_PATH}/send_message.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/archive/send_message-%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m%n ,r=%X{rid}</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
         </layout>
     </appender>
 
 
-    <logger name="com.smart.api" level="info" additivity="false">
+    <logger name="com.smart" level="info" additivity="false">
         <appender-ref ref="info"/>
         <appender-ref ref="warn"/>
         <appender-ref ref="error"/>
@@ -135,9 +137,13 @@
     <logger name="redis.clients.jedis" level="info" additivity="false">
         <appender-ref ref="jedis"/>
     </logger>
-    <logger name="sendMessage" level="info" additivity="false">
-        <appender-ref ref="sendMessage"/>
+    <logger name="request" level="info" additivity="false">
+        <appender-ref ref="request"/>
     </logger>
+    <logger name="send_kafka_message" level="info" additivity="false">
+        <appender-ref ref="send_kafka_message"/>
+    </logger>
+
 
     <root level="info">
         <appender-ref ref="console"/>

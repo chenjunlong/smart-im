@@ -18,8 +18,7 @@
         <module>api</module>
         <module>tcpserver</module>
         <module>service</module>
-        <module>data</module>
-        <module>auth</module>
+        <module>core</module>
     </modules>
 
     <properties>

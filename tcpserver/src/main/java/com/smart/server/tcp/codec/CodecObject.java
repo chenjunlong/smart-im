@@ -1,7 +1,5 @@
 package com.smart.server.tcp.codec;
 
-import java.util.Arrays;
-
 /**
  * @author chenjunlong
  */

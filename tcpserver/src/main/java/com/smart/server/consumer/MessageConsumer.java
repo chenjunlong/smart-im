@@ -1,9 +1,7 @@
 package com.smart.server.consumer;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.google.gson.Gson;
 import com.smart.server.common.constant.Constant;
-import com.smart.server.model.CmdEnum;
 import com.smart.server.tcp.channel.ChannelRegistry;
 import com.smart.server.tcp.codec.CodecObject;
 import com.smart.service.common.kafka.Topic;
@@ -70,7 +68,7 @@ public class MessageConsumer extends BaseConsumer<String, String> {
         }
 
         Message message = Message.toObject(consumerRecord.value());
-        Set<Long> userSet = ChannelRegistry.getUidByRoomId(message.getTargetRoomId());
+        Set<Long> userSet = ChannelRegistry.getUidByRoomId(message.getReceiveId());
         for (long uid : userSet) {
             Channel channel = ChannelRegistry.getChannelByUid(uid);
             if (channel == null) {
@@ -78,7 +76,7 @@ public class MessageConsumer extends BaseConsumer<String, String> {
             }
 
             CodecObject codecObject = new CodecObject();
-            codecObject.cmd = CmdEnum.RESPONSE.getCmdId();
+            codecObject.cmd = message.getCmd();
             codecObject.body = message.toJson().getBytes();
 
             channel.writeAndFlush(codecObject);
