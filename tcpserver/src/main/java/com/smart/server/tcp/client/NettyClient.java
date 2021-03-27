@@ -1,6 +1,5 @@
 package com.smart.server.tcp.client;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.smart.server.model.ConnectRequest;
 import com.smart.server.tcp.codec.CodecObject;
@@ -68,6 +67,7 @@ public class NettyClient {
 
             CodecObject connReq = new CodecObject();
             connReq.cmd = 1;
+            connReq.seq = System.currentTimeMillis();
             connReq.body = connectRequest.toJson().getBytes();
             ChannelFuture channelFuture = ctx.writeAndFlush(connReq);
             System.out.println(channelFuture.cause());
@@ -81,9 +81,11 @@ public class NettyClient {
 
     public static void main(String[] args) throws Exception {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
-        String addressList = restTemplate.getForObject("http://localhost:8000/v1/smart-im/dispatch/connect_address", String.class);
-        JsonElement element = JsonParser.parseString(addressList);
-        String address = element.getAsJsonArray().get(0).getAsString();
+        String response = restTemplate.getForObject("http://localhost:8000/v1/smart-im/dispatch/connect_address", String.class);
+        String address = JsonParser.parseString(response)
+                .getAsJsonObject()
+                .getAsJsonArray("body")
+                .get(0).getAsString();
 
         String ip = address.split(":")[0];
         int port = Integer.parseInt(address.split(":")[1]);

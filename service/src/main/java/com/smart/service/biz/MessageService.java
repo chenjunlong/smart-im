@@ -23,22 +23,22 @@ public class MessageService {
     @Resource(name = "smartImKafkaProducer")
     private Producer producer;
 
-    public void send(long senderId, String receiveId, int boardCast, int cmd, String content) {
-        Message message = new Message();
-        message.setTimestamp(System.currentTimeMillis());
-        message.setSenderId(senderId);
-        message.setReceiveId(receiveId);
-        message.setCmd(cmd);
-        message.setBoardCast(boardCast);
-        message.setContent(content);
+    public boolean send(long senderId, String receiveId, int boardCast, int cmd, String content) {
+        Message.Body body = new Message.Body();
+        body.senderId = senderId;
+        body.receiveId = receiveId;
+        body.boardCast = boardCast;
+        body.content = content;
+        String messageJson = new Message().build(cmd, body).toJson();
 
-        String messageJson = message.toJson();
         Future<RecordMetadata> future = producer.send(new ProducerRecord(Topic.SMART_IM_MESSAGE, messageJson));
         try {
             future.get();
             log.info(messageJson);
+            return true;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            return false;
         }
     }
 }

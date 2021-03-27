@@ -21,6 +21,7 @@ public class SmartDecoder extends LengthFieldBasedFrameDecoder {
 
         CodecObject codecObject = new CodecObject();
         codecObject.cmd = in.readInt();
+        codecObject.seq = in.readLong();
         int bodyLen = in.readInt();
 
         if (bodyLen > 0) {

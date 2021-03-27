@@ -11,6 +11,7 @@ public enum CmdEnum {
 
     HEART_BEAT(0),
     AUTH(1),
+    CLOSED(2),
     COMMENT(101);
 
     private static final Map<Integer, CmdEnum> enumCache = Arrays.stream(CmdEnum.values()).collect(Collectors.toMap(e -> e.getCmdId(), e -> e));

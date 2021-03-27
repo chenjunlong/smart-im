@@ -31,7 +31,7 @@ public class ConnectService {
     }
 
     public Optional<Long> unregister(String address) {
-        Long result = redisTemplate.sadd(RedisConfig.Key.TCP_SERVER_NODE_ADDRESS, address);
+        Long result = redisTemplate.srem(RedisConfig.Key.TCP_SERVER_NODE_ADDRESS, address);
         if (result == null) {
             return Optional.empty();
         }

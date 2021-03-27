@@ -6,10 +6,11 @@ package com.smart.server.tcp.codec;
 public class CodecObject {
 
     public int cmd;
+    public long seq;
     public byte[] body;
 
     @Override
     public String toString() {
-        return "CodecObject{" + "cmd=" + cmd + ", body=" + new String(body) + '}';
+        return "CodecObject{" + "cmd=" + cmd + ", seq=" + seq + ", body=" + new String(body) + '}';
     }
 }

@@ -672,7 +672,7 @@ public class RedisTemplate implements JedisCommands {
         return (Long) this.execute(new RedisCallback<Long>() {
             @Override
             public Long doInRedis(Jedis jedis) {
-                return jedis.srem(key);
+                return jedis.srem(key, strings);
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.smart.api.request;
 
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -73,6 +74,10 @@ public class RequestLogInterceptor implements HandlerInterceptor {
 
     private String getParams(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
+        if (MapUtils.isEmpty(params)) {
+            return null;
+        }
+
         String queryString = "";
         for (String key : params.keySet()) {
             String[] values = params.get(key);

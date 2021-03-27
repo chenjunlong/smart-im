@@ -1,30 +1,32 @@
 package com.smart.service.common.model;
 
-import com.google.gson.Gson;
-import lombok.Data;
+import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
 
 /**
  * @author chenjunlong
  */
-@Data
-public class Message {
+@Getter
+public class Message extends BaseModel {
 
-    private long senderId;
-    private String receiveId;
-    private int boardCast;
     private int cmd;
-    private String content;
-    private long timestamp;
+    private Body body;
 
-    private static final Gson gson = new Gson();
-
-    public String toJson() {
-        return gson.toJson(this);
+    public Message build(int cmd, Body body) {
+        this.cmd = cmd;
+        this.body = body;
+        return this;
     }
 
-    public static Message toObject(String value) {
-        Message message = gson.fromJson(value, Message.class);
-        message.setTimestamp(System.currentTimeMillis());
-        return message;
+    public static class Body extends BaseModel {
+        @SerializedName("sender_id")
+        public long senderId;
+        @SerializedName("receive_id")
+        public String receiveId;
+        @SerializedName("board_cast")
+        public int boardCast;
+        public String content;
+        public long timestamp = System.currentTimeMillis();
     }
+
 }

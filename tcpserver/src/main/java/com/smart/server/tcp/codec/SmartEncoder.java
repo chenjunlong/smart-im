@@ -12,6 +12,7 @@ public class SmartEncoder extends MessageToByteEncoder<CodecObject> {
     @Override
     protected void encode(ChannelHandlerContext ctx, CodecObject msg, ByteBuf out) {
         out.writeInt(msg.cmd);
+        out.writeLong(msg.seq);
         out.writeInt(null != msg.body ? msg.body.length : 0);
         if (null != msg.body) {
             out.writeBytes(msg.body);

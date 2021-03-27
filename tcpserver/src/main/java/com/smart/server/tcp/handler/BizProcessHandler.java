@@ -17,6 +17,11 @@ import java.net.InetSocketAddress;
 @Slf4j
 public class BizProcessHandler extends SimpleChannelInboundHandler<Object> {
 
+    /**
+     * 客户端连接断开时触发
+     *
+     * @param ctx
+     */
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) {
         // 断连操作
@@ -31,6 +36,12 @@ public class BizProcessHandler extends SimpleChannelInboundHandler<Object> {
         log.info(String.format("[channelUnregistered %s:%s] roomId:%s, uid:%s exit.", clientIp, port, roomId, uid));
     }
 
+    /**
+     * 客户端连接建立成功时触发
+     *
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.info("channelActive");
@@ -63,13 +74,21 @@ public class BizProcessHandler extends SimpleChannelInboundHandler<Object> {
                 log.info(String.format("[heart_beat %s:%s]", clientIp, port));
 
             } else if (cmd == CmdEnum.AUTH.getCmdId()) { // 加入房间鉴权消息
-                ConnectRequest connectRequest = ConnectRequest.parseFromJson(body);
+                ConnectRequest connectRequest = ConnectRequest.toObject(body, ConnectRequest.class);
                 String roomId = connectRequest.getRoomId();
                 Long uid = connectRequest.getUid();
 
                 // TODO: 权限认证，通过后加入房间
                 ChannelRegistry.add(roomId, uid, channel);
                 log.info(String.format("[auth %s:%s] roomId:%s, uid:%s join.", clientIp, port, roomId, uid));
+
+            } else if (cmd == CmdEnum.CLOSED.getCmdId()) { // 退出房间消息
+                ConnectRequest connectRequest = ConnectRequest.toObject(body, ConnectRequest.class);
+                String roomId = connectRequest.getRoomId();
+                Long uid = connectRequest.getUid();
+
+                ChannelRegistry.remove(roomId, uid, channel);
+                log.info(String.format("[closed %s:%s] roomId:%s, uid:%s exit.", clientIp, port, roomId, uid));
             } else {
                 throw new UnsupportedOperationException(String.format("cmd:%s Unsupported.", cmd));
             }

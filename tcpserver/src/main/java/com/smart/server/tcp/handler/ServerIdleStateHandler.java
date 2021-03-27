@@ -3,9 +3,9 @@ package com.smart.server.tcp.handler;
 import com.smart.server.tcp.channel.ChannelRegistry;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -14,11 +14,7 @@ import java.net.InetSocketAddress;
  * @author chenjunlong
  */
 @Slf4j
-public class ServerIdleStateHandler extends IdleStateHandler {
-
-    public ServerIdleStateHandler(int readerIdleTimeSeconds, int writerIdleTimeSeconds, int allIdleTimeSeconds) {
-        super(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds);
-    }
+public class ServerIdleStateHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {

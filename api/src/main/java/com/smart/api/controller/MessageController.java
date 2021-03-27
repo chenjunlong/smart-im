@@ -45,7 +45,6 @@ public class MessageController {
         if (!CmdEnum.isValid(cmd)) {
             throw new ApiException(ExcepFactor.E_PARAMS_ERROR, "cmd").setAttribute("rid", MDC.get("rid"));
         }
-        messageService.send(senderId, receiveId, boardCast, cmd, content);
-        return true;
+        return messageService.send(senderId, receiveId, boardCast, cmd, content);
     }
 }

@@ -3,6 +3,15 @@ spring:
     name: tcpserver
   profiles:
     active: online
+server:
+  port: 8001
+  tomcat:
+    max-connections: 2000
+    threads:
+      max: 800
+      min-spare: 10
+  servlet:
+    context-path: /v1/smart-im
 logging:
   config: classpath:logback-spring.xml
 tcpserver:

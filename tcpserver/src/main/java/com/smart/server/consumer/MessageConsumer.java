@@ -67,8 +67,10 @@ public class MessageConsumer extends BaseConsumer<String, String> {
             return;
         }
 
-        Message message = Message.toObject(consumerRecord.value());
-        Set<Long> userSet = ChannelRegistry.getUidByRoomId(message.getReceiveId());
+        Message message = Message.toObject(consumerRecord.value(), Message.class);
+        Message.Body body = message.getBody();
+        Set<Long> userSet = ChannelRegistry.getUids(body.receiveId, body.boardCast);
+
         for (long uid : userSet) {
             Channel channel = ChannelRegistry.getChannelByUid(uid);
             if (channel == null) {
@@ -77,7 +79,8 @@ public class MessageConsumer extends BaseConsumer<String, String> {
 
             CodecObject codecObject = new CodecObject();
             codecObject.cmd = message.getCmd();
-            codecObject.body = message.toJson().getBytes();
+            codecObject.seq = System.nanoTime();
+            codecObject.body = body.toJson().getBytes();
 
             channel.writeAndFlush(codecObject);
         }

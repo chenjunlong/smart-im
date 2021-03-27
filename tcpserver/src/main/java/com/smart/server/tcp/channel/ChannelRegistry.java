@@ -2,6 +2,7 @@ package com.smart.server.tcp.channel;
 
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * @author chenjunlong
@@ -76,6 +78,32 @@ public class ChannelRegistry {
      */
     public static Set<Long> getUidByRoomId(String roomId) {
         return roomUser.get(roomId);
+    }
+
+    /**
+     * 获取所用房间用户
+     *
+     * @return 用户ID列表
+     */
+    public static Set<Long> getAllUid() {
+        return roomUser.values().stream().collect(Collectors.toSet());
+    }
+
+    /**
+     * 获取房间用户
+     *
+     * @param receiveId
+     * @param boardCast
+     * @return
+     */
+    public static Set<Long> getUids(String receiveId, int boardCast) {
+        if (boardCast == 1 && receiveId.equals("*")) {
+            return ChannelRegistry.getAllUid();
+        } else if (boardCast == 1) {
+            return ChannelRegistry.getUidByRoomId(receiveId);
+        } else {
+            return Sets.newHashSet(Long.parseLong(receiveId));
+        }
     }
 
     /**
