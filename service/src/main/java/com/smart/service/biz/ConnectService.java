@@ -1,16 +1,18 @@
 package com.smart.service.biz;
 
-import com.smart.data.redis.RedisTemplate;
-import com.smart.service.config.RedisConfig;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import javax.annotation.Resource;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import com.smart.data.redis.RedisTemplate;
+import com.smart.service.config.RedisConfig;
 
 /**
  * @author chenjunlong
@@ -38,11 +40,11 @@ public class ConnectService {
         return Optional.of(result);
     }
 
-    public Set<String> getConnectAddress() {
+    public List<String> getConnectAddress() {
         Set<String> address = redisTemplate.smembers(RedisConfig.Key.TCP_SERVER_NODE_ADDRESS);
-        if(CollectionUtils.isEmpty(address)) {
-            return Collections.emptySet();
+        if (CollectionUtils.isEmpty(address)) {
+            return Collections.emptyList();
         }
-        return address;
+        return address.stream().collect(Collectors.toList());
     }
 }

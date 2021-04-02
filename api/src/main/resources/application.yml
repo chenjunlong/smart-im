@@ -30,3 +30,5 @@ redis:
       host: 10.211.163.123
       port: 6379
       timeout: 2000
+config:
+  tcp-loadbalance: roundrobin
