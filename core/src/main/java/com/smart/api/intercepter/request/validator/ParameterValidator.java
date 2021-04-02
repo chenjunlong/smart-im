@@ -1,11 +1,12 @@
-package com.smart.api.request.validator;
+package com.smart.api.intercepter.request.validator;
 
-import com.smart.api.exception.ApiException;
-import com.smart.api.exception.ExcepFactor;
+import java.util.Map;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Map;
+import com.smart.api.exception.ApiInvalidParameterException;
+import com.smart.api.exception.ExcepFactor;
 
 /**
  * @author chenjunlong
@@ -27,7 +28,7 @@ public class ParameterValidator {
             return;
         }
         if (!this.typeValidator.isValid(values)) {
-            throw new ApiException(ExcepFactor.E_PARAMS_ERROR, this.parameterName, this.typeValidator.getDesc(), StringUtils.join(values, ","));
+            throw new ApiInvalidParameterException(ExcepFactor.E_PARAMS_ERROR, this.parameterName, this.typeValidator.getDesc(), StringUtils.join(values, ","));
         }
     }
 

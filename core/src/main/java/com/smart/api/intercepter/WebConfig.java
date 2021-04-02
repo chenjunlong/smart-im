@@ -1,8 +1,8 @@
 package com.smart.api.intercepter;
 
-import com.smart.api.auth.AuthInterceptor;
-import com.smart.api.request.RequestLogInterceptor;
-import com.smart.api.request.validator.ParameterValidatorInterceptor;
+import com.smart.api.intercepter.auth.AuthInterceptor;
+import com.smart.api.intercepter.request.RequestLogInterceptor;
+import com.smart.api.intercepter.request.validator.ParameterValidatorInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

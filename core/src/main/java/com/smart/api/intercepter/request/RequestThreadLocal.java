@@ -1,4 +1,4 @@
-package com.smart.api.request;
+package com.smart.api.intercepter.request;
 
 import javax.servlet.http.HttpServletRequest;
 

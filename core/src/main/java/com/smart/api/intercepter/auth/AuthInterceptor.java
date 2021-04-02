@@ -1,5 +1,6 @@
-package com.smart.api.auth;
+package com.smart.api.intercepter.auth;
 
+import com.smart.api.exception.AuthFailException;
 import com.smart.api.exception.ExcepFactor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;

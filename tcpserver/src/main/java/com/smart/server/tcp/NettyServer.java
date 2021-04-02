@@ -86,9 +86,7 @@ public class NettyServer {
         }
 
         this.serverBootstrap = new ServerBootstrap();
-        this.serverBootstrap.group(this.bossGroup, this.workerGroup)
-                .option(ChannelOption.SO_BACKLOG, 10240)
-                .childOption(ChannelOption.SO_KEEPALIVE, true)
+        this.serverBootstrap.group(this.bossGroup, this.workerGroup).option(ChannelOption.SO_BACKLOG, 10240).childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childHandler(this.channelHandler);
 
         if (Epoll.isAvailable()) {

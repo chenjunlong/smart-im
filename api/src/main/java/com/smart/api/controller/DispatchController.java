@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.smart.api.annotation.RequestLog;
 import com.smart.api.annotation.ResponseLog;
-import com.smart.api.auth.BaseInfo;
+import com.smart.api.intercepter.auth.BaseInfo;
 import com.smart.api.service.DispatchService;
 
 import lombok.extern.slf4j.Slf4j;

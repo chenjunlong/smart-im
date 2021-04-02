@@ -53,7 +53,7 @@ public class NettyClient {
 
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
-            CodecObject codecObject = (CodecObject)msg;
+            CodecObject codecObject = (CodecObject) msg;
             System.out.println("接受到server响应数据: " + codecObject.toString());
         }
 
@@ -82,10 +82,7 @@ public class NettyClient {
     public static void main(String[] args) throws Exception {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         String response = restTemplate.getForObject("http://localhost:8000/v1/smart-im/dispatch/connect_address", String.class);
-        String address = JsonParser.parseString(response)
-                .getAsJsonObject()
-                .getAsJsonArray("body")
-                .get(0).getAsString();
+        String address = JsonParser.parseString(response).getAsJsonObject().getAsJsonArray("body").get(0).getAsString();
 
         String ip = address.split(":")[0];
         int port = Integer.parseInt(address.split(":")[1]);

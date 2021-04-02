@@ -1,4 +1,4 @@
-package com.smart.api.request.validator;
+package com.smart.api.intercepter.request.validator;
 
 import com.smart.api.annotation.ParamDesc;
 import lombok.extern.slf4j.Slf4j;

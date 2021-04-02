@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class MessageConsumer extends BaseConsumer<String, String> {
 
-    private static final ExecutorService pool =
-            new ThreadPoolExecutor(16, 16, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue(200), new ThreadFactoryBuilder().setNameFormat("MessageConsumerPool").build(), new ThreadPoolExecutor.CallerRunsPolicy());
+    private static final ExecutorService pool = new ThreadPoolExecutor(16, 16, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue(200),
+            new ThreadFactoryBuilder().setNameFormat("MessageConsumerPool").build(), new ThreadPoolExecutor.CallerRunsPolicy());
 
     @Value("${kafka.smart-im.bootstrap-server}")
     private String bootstrapServer;

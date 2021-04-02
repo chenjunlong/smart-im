@@ -2,8 +2,7 @@ package com.smart.api.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
-import com.smart.api.request.RequestThreadLocal;
+import com.smart.api.intercepter.request.RequestThreadLocal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

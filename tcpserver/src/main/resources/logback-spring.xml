@@ -93,6 +93,21 @@
         </layout>
     </appender>
 
+    <!-- tcp断连日志 -->
+    <appender name="disconnet" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/disconnet.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archive/disconnet-%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m,r=%X{rid}%n</Pattern>
+        </layout>
+    </appender>
+
 
     <logger name="com.smart" level="info" additivity="false">
         <appender-ref ref="info"/>
@@ -104,6 +119,9 @@
     </logger>
     <logger name="redis.clients.jedis" level="info" additivity="false">
         <appender-ref ref="jedis"/>
+    </logger>
+    <logger name="disconnet" level="info" additivity="false">
+        <appender-ref ref="disconnet"/>
     </logger>
 
 

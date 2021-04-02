@@ -39,8 +39,8 @@ public class ChannelRegistry {
     /**
      * 用户Channel注册到房间
      *
-     * @param roomId  房间ID
-     * @param uid     用户ID
+     * @param roomId 房间ID
+     * @param uid 用户ID
      * @param channel 连接
      */
     public static void add(String roomId, Long uid, Channel channel) {
@@ -53,8 +53,8 @@ public class ChannelRegistry {
     /**
      * 用户Channel从房间移除
      *
-     * @param roomId  房间ID
-     * @param uid     用户ID
+     * @param roomId 房间ID
+     * @param uid 用户ID
      * @param channel 连接
      */
     public static void remove(String roomId, Long uid, Channel channel) {

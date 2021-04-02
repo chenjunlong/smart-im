@@ -1,4 +1,4 @@
-package com.smart.api.request.validator;
+package com.smart.api.intercepter.request.validator;
 
 /**
  * @author chenjunlong

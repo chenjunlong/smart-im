@@ -1,4 +1,4 @@
-package com.smart.api.auth;
+package com.smart.api.intercepter.auth;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

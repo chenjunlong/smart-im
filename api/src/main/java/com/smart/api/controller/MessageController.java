@@ -3,7 +3,7 @@ package com.smart.api.controller;
 import com.smart.api.annotation.ParamDesc;
 import com.smart.api.annotation.RequestLog;
 import com.smart.api.annotation.ResponseLog;
-import com.smart.api.auth.BaseInfo;
+import com.smart.api.intercepter.auth.BaseInfo;
 import com.smart.api.exception.ApiException;
 import com.smart.api.exception.ExcepFactor;
 import com.smart.service.biz.MessageService;

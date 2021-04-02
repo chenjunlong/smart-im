@@ -1,7 +1,7 @@
-package com.smart.api.request.validator;
+package com.smart.api.intercepter.request.validator;
 
-import com.smart.api.request.validator.range.ParamRange;
-import com.smart.api.request.validator.range.RangeFactory;
+import com.smart.api.intercepter.request.validator.range.ParamRange;
+import com.smart.api.intercepter.request.validator.range.RangeFactory;
 import com.smart.common.util.ClassUtil;
 
 /**

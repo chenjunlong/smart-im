@@ -1,4 +1,4 @@
-package com.smart.api.request.validator.range;
+package com.smart.api.intercepter.request.validator.range;
 
 /**
  * @author chenjunlong

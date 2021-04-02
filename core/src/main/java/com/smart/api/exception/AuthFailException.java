@@ -1,8 +1,5 @@
-package com.smart.api.auth;
+package com.smart.api.exception;
 
-
-import com.smart.api.exception.ApiException;
-import com.smart.api.exception.ExcepFactor;
 
 /**
  * @author chenjunlong
@@ -11,5 +8,9 @@ public class AuthFailException extends ApiException {
 
     public AuthFailException(ExcepFactor excepFactor) {
         super(excepFactor);
+    }
+
+    public AuthFailException(ExcepFactor excepFactor, Object... args) {
+        super(excepFactor, args);
     }
 }
