@@ -2,6 +2,7 @@ package com.smart.api.exception;
 
 import com.smart.api.domain.ApiResponse;
 import com.smart.api.intercepter.request.RequestThreadLocal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * @author chenjunlong
  */
+@Slf4j
 @ControllerAdvice
 public class ExcepFactorHandler {
 
@@ -72,6 +74,7 @@ public class ExcepFactorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ApiResponse exception(Exception e) {
+        log.error(e.getMessage(), e);
         return ApiResponse.failure(ExcepFactor.E_DEFAULT.getErrorCode(), ExcepFactor.E_DEFAULT.getError(), RequestThreadLocal.getRequestPath());
     }
 }

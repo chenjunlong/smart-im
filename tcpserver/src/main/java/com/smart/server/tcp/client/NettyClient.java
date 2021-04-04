@@ -5,6 +5,7 @@ import com.smart.server.model.ConnectRequest;
 import com.smart.server.tcp.codec.CodecObject;
 import com.smart.server.tcp.codec.SmartDecoder;
 import com.smart.server.tcp.codec.SmartEncoder;
+import com.smart.service.common.model.Message;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -54,7 +55,11 @@ public class NettyClient {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
             CodecObject codecObject = (CodecObject) msg;
-            System.out.println("接受到server响应数据: " + codecObject.toString());
+
+            if (codecObject.cmd == 101) {
+                Message.Body body = Message.Body.parseFromPb(codecObject.body, Message.Body.class);
+                System.out.println(String.format("接受到server响应数据, cmd:%s, body:%s", codecObject.cmd, body.toString()));
+            }
         }
 
         @Override
@@ -63,12 +68,12 @@ public class NettyClient {
 
             ConnectRequest connectRequest = new ConnectRequest();
             connectRequest.setRoomId("room1001");
-            connectRequest.setUid(1001);
+            connectRequest.setUid(1002);
 
             CodecObject connReq = new CodecObject();
             connReq.cmd = 1;
             connReq.seq = System.currentTimeMillis();
-            connReq.body = connectRequest.toJson().getBytes();
+            connReq.body = connectRequest.toPb();
             ChannelFuture channelFuture = ctx.writeAndFlush(connReq);
             System.out.println(channelFuture.cause());
         }

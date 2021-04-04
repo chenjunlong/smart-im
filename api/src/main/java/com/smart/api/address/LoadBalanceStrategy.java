@@ -1,4 +1,4 @@
-package com.smart.api.address.loadbalance;
+package com.smart.api.address;
 
 import java.util.Map;
 

@@ -2,6 +2,7 @@ package com.smart.server.consumer;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.smart.server.common.constant.Constant;
+import com.smart.server.service.ChannelService;
 import com.smart.server.tcp.channel.ChannelRegistry;
 import com.smart.server.tcp.codec.CodecObject;
 import com.smart.service.common.kafka.Topic;
@@ -12,6 +13,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -32,6 +34,9 @@ public class MessageConsumer extends BaseConsumer<String, String> {
     private String bootstrapServer;
     @Value("${tcpserver.port}")
     private int port;
+
+    @Resource
+    private ChannelService channelService;
 
     @Override
     public String topic() {
@@ -67,23 +72,8 @@ public class MessageConsumer extends BaseConsumer<String, String> {
             return;
         }
 
-        Message message = Message.toObject(consumerRecord.value(), Message.class);
-        Message.Body body = message.getBody();
-        Set<Long> userSet = ChannelRegistry.getUids(body.receiveId, body.boardCast);
-
-        for (long uid : userSet) {
-            Channel channel = ChannelRegistry.getChannelByUid(uid);
-            if (channel == null) {
-                continue;
-            }
-
-            CodecObject codecObject = new CodecObject();
-            codecObject.cmd = message.getCmd();
-            codecObject.seq = System.nanoTime();
-            codecObject.body = body.toJson().getBytes();
-
-            channel.writeAndFlush(codecObject);
-        }
+        Message message = Message.parseFromJson(consumerRecord.value(), Message.class);
+        channelService.send(message);
     }
 
 }

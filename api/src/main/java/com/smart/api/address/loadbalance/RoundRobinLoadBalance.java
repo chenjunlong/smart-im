@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.smart.api.address.AbstractLoadBalance;
 import org.springframework.stereotype.Component;
 
 import com.smart.common.util.MathUtil;

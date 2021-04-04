@@ -6,7 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.smart.api.address.loadbalance.LoadBalanceStrategy;
+import com.smart.api.address.LoadBalanceStrategy;
 import com.smart.service.biz.ConnectService;
 
 /**

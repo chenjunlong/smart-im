@@ -1,9 +1,8 @@
-package com.smart.api.address.loadbalance;
+package com.smart.api.address;
 
 import java.util.Collections;
 import java.util.List;
 
-import com.smart.api.address.LoadBalance;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**

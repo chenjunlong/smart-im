@@ -1,7 +1,9 @@
 package com.smart.service.common.model;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author chenjunlong
@@ -18,6 +20,8 @@ public class Message extends BaseModel {
         return this;
     }
 
+    @ToString
+    @EqualsAndHashCode
     public static class Body extends BaseModel {
         @SerializedName("sender_id")
         public long senderId;
