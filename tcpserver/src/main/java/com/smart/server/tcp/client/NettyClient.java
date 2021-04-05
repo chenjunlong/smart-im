@@ -1,18 +1,25 @@
 package com.smart.server.tcp.client;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.RandomUtils;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.web.client.RestTemplate;
+
 import com.google.gson.JsonParser;
 import com.smart.server.model.ConnectRequest;
+import com.smart.server.model.HeartBeatRequest;
 import com.smart.server.tcp.codec.CodecObject;
 import com.smart.server.tcp.codec.SmartDecoder;
 import com.smart.server.tcp.codec.SmartEncoder;
 import com.smart.service.common.model.Message;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @author chenjunlong
@@ -52,41 +59,67 @@ public class NettyClient {
 
     class ClientHandler extends SimpleChannelInboundHandler {
 
+        private String roomId = "room1001";
+        private long uid = RandomUtils.nextLong();
+
+        @Override
+        public void channelUnregistered(ChannelHandlerContext ctx) {
+            // 启动线程重新连接
+            System.out.println("重新开始连接...");
+            ctx.channel().eventLoop().schedule(() -> doConnect(ctx), 10, TimeUnit.SECONDS);
+        }
+
+        // 读取数据
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
             CodecObject codecObject = (CodecObject) msg;
-
             if (codecObject.cmd == 101) {
                 Message.Body body = Message.Body.parseFromPb(codecObject.body, Message.Body.class);
                 System.out.println(String.format("接受到server响应数据, cmd:%s, body:%s", codecObject.cmd, body.toString()));
             }
         }
 
+        // 鉴权，开启心跳
         @Override
-        public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            super.channelActive(ctx);
+        public void channelActive(ChannelHandlerContext ctx) {
+            this.doConnect(ctx);
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> this.doHeartBeat(ctx), 10, 10, TimeUnit.SECONDS);
+        }
 
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            cause.printStackTrace();
+            ctx.close();
+        }
+
+        private void doConnect(ChannelHandlerContext ctx) {
             ConnectRequest connectRequest = new ConnectRequest();
-            connectRequest.setRoomId("room1001");
-            connectRequest.setUid(1002);
+            connectRequest.setRoomId(roomId);
+            connectRequest.setUid(uid);
 
             CodecObject connReq = new CodecObject();
             connReq.cmd = 1;
             connReq.seq = System.currentTimeMillis();
             connReq.body = connectRequest.toPb();
-            ChannelFuture channelFuture = ctx.writeAndFlush(connReq);
-            System.out.println(channelFuture.cause());
+            ctx.writeAndFlush(connReq);
         }
 
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            ctx.close();
+        private void doHeartBeat(ChannelHandlerContext ctx) {
+            HeartBeatRequest heartBeatRequest = new HeartBeatRequest();
+            heartBeatRequest.setRoomId(roomId);
+            heartBeatRequest.setUid(uid);
+
+            CodecObject heartBeatReq = new CodecObject();
+            heartBeatReq.cmd = 0;
+            heartBeatReq.seq = System.currentTimeMillis();
+            heartBeatReq.body = heartBeatRequest.toPb();
+            ctx.writeAndFlush(heartBeatReq);
         }
     }
 
     public static void main(String[] args) throws Exception {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
-        String response = restTemplate.getForObject("http://localhost:8000/v1/smart-im/dispatch/connect_address", String.class);
+        String response = restTemplate.getForObject("http://10.211.163.123:8000/v1/smart-im/dispatch/connect_address", String.class);
         String address = JsonParser.parseString(response).getAsJsonObject().getAsJsonArray("body").get(0).getAsString();
 
         String ip = address.split(":")[0];

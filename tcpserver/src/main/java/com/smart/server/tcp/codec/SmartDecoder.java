@@ -28,11 +28,6 @@ public class SmartDecoder extends LengthFieldBasedFrameDecoder {
             codecObject.body = new byte[bodyLen];
             in.readBytes(codecObject.body);
         }
-
-        try {
-            return codecObject;
-        } catch (Exception e) {
-            throw new IllegalArgumentException(String.format("JsonDecoder failure, cmd: %s", codecObject.cmd), e);
-        }
+        return codecObject;
     }
 }

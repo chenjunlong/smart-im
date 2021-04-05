@@ -26,6 +26,6 @@ while [[ ${COUNT} -lt 1 ]]; do
   fi
 done
 
-rm -f "${PID_FILE}"
+rm -f ${PID_FILE}
 echo "OK!"
 echo "PID: $PID"

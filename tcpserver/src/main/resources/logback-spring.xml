@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
-    <property name="LOG_PATH" value="/Users/chenjunlong/Downloads/logs/tcpserver"/>
+    <!--<property name="LOG_PATH" value="/Users/chenjunlong/Downloads/logs/tcpserver"/>-->
+    <property name="LOG_PATH" value="/data1/service/tcpserver/logs"/>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
