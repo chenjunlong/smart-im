@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author chenjunlong
+ * @desc 消息投递
  */
 @Slf4j
 @RestController
@@ -42,7 +43,7 @@ public class MessageController {
      */
     @RequestLog
     @ResponseLog
-    @BaseInfo(desc = "发送IM消息", needAuth = true)
+    @BaseInfo(desc = "发送IM消息", needAuth = true, rateLimit = 1000)
     @PostMapping(value = "/send", produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean send(@RequestParam(value = "sender_id") @ParamDesc(desc = "发送者uid", range = "long:1~-1") long senderId,
             @RequestParam(value = "receive_id") @ParamDesc(desc = "接收者uid, *表示所有房间所有人") String receiveId,

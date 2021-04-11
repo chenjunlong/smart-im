@@ -49,6 +49,19 @@ public class ExcepFactorHandler {
     }
 
     /**
+     * api限流
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(ApiRateLimitException.class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    @ResponseBody
+    public ApiResponse apiRateLimit(ApiRateLimitException e) {
+        return ApiResponse.failure(e.getErrorCode(), e.getError(), RequestThreadLocal.getRequestPath(), e.getBody());
+    }
+
+    /**
      * 服务器内部错误
      * 
      * @param e

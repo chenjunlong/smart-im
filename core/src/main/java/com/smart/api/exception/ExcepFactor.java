@@ -18,4 +18,6 @@ public class ExcepFactor {
     public static final ExcepFactor E_PARAMS_ERROR = new ExcepFactor(10003, "错误:缺失必选参数: %s");
     public static final ExcepFactor E_PARAM_INVALID_ERROR = new ExcepFactor(10004, "请求参数错误 (参数: %s), 预期: %s, 实际: %s)");
     public static final ExcepFactor E_NOTFOUND_API = new ExcepFactor(10005, "接口不存在");
+    public static final ExcepFactor E_API_RATE_LIMIT = new ExcepFactor(10006, "服务器繁忙");
+
 }

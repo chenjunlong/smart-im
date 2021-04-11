@@ -44,6 +44,10 @@ public class ApiResponse {
         return new ApiResponse(errorCode, error, request, attributes);
     }
 
+    public static ApiResponse failure(int errorCode, String error, String request, Object body) {
+        return new ApiResponse(errorCode, error, request, body, null);
+    }
+
     public static ApiResponse success(Object body) {
         return new ApiResponse(0, "success", RequestThreadLocal.getRequestPath(), body, null);
     }

@@ -1,4 +1,4 @@
-package com.smart.server.tcp.client;
+package client;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
