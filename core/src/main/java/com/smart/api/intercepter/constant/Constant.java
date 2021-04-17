@@ -8,5 +8,5 @@ public class Constant {
     public static final String RID = "rid";
     public static final String STIME = "stime";
     public static final long DEFAULT_RATE_LIMIT = 2000;
-    public static final String CLASS_SEPARATOR = "#";
+
 }

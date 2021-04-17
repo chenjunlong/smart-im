@@ -18,6 +18,9 @@ import org.springframework.util.SystemPropertyUtils;
 
 import com.smart.api.intercepter.auth.BaseInfo;
 import com.smart.api.intercepter.constant.Constant;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author chenjunlong
@@ -25,6 +28,7 @@ import com.smart.api.intercepter.constant.Constant;
 public class RateLimiterScanner {
 
     private static final Logger infoLog = LoggerFactory.getLogger("info");
+    private static final Logger errorLog = LoggerFactory.getLogger("error");
 
     private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
     private MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
@@ -54,15 +58,17 @@ public class RateLimiterScanner {
                     for (Method method : methods) {
                         Annotation annotation = method.getAnnotation(BaseInfo.class);
                         if (null != annotation) {
-                            String counterName = classz.getName() + Constant.CLASS_SEPARATOR + method.getName();
-                            QpsStorage.create(counterName);
-                            infoLog.info(" QpsCounter#create: {}", counterName);
+                            String counterName = RateLimiterUtils.buildName(classz, method);
+                            String counterPath = RateLimiterUtils.buildPath(classz, method);
+                            QpsStorage.create(counterPath);
+                            infoLog.info("QpsCounter init: name:{}, url:{}", counterName, counterPath);
                         }
                     }
                 } catch (Exception e) {
-
+                    errorLog.error("init QpsCounter failure,", e);
                 }
             }
         }
     }
+
 }

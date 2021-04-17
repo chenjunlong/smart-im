@@ -9,4 +9,4 @@ RUN \
 
 EXPOSE 8000
 
-CMD ["/data1/service/api/bin/start.sh"]
+CMD ["/data1/service/api/bin/start.sh docker"]

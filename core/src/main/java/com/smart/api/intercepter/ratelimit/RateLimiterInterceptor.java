@@ -39,11 +39,14 @@ public class RateLimiterInterceptor implements HandlerInterceptor {
             limit = baseInfo.rateLimit();
         }
 
-        String clazzName = handlerMethod.getBean().getClass().getName();
-        String methodName = handlerMethod.getMethod().getName();
-        String counterName = clazzName + Constant.CLASS_SEPARATOR + methodName;
+        Class clazz = handlerMethod.getBean().getClass();
+        String counterPath = RateLimiterUtils.buildPath(clazz, handlerMethod.getMethod());
+        QpsCounter qpsCounter = QpsStorage.get(counterPath);
+        if(qpsCounter == null){
+            return true;
+        }
 
-        long currQps = QpsStorage.get(counterName).incr(System.currentTimeMillis(), 1L);
+        long currQps = QpsStorage.get(counterPath).incr(System.currentTimeMillis(), 1L);
         if (currQps > limit) {
             String fallbackMethod = baseInfo.fallbackMethod();
             if (StringUtils.isBlank(fallbackMethod)) {
@@ -55,7 +58,7 @@ public class RateLimiterInterceptor implements HandlerInterceptor {
             Object[] parameterValues = new Object[parameters.length];
             this.buildParameters(request, parameters, parameterTypes, parameterValues);
 
-            Object result = this.fallback(clazzName, fallbackMethod, parameterTypes, parameterValues);
+            Object result = this.fallback(clazz.getName(), fallbackMethod, parameterTypes, parameterValues);
             throw new ApiRateLimitException(ExcepFactor.E_API_RATE_LIMIT, result);
         }
         return true;
