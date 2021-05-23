@@ -20,7 +20,7 @@ public class LoadBalanceStrategy {
     private Map<String, LoadBalance> strategyMap;
 
 
-    public LoadBalance build() {
+    public LoadBalance getLoadBalance() {
         return strategyMap.get(strategyName);
     }
 

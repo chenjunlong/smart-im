@@ -32,3 +32,6 @@ redis:
       timeout: 2000
 config:
   tcp-loadbalance: roundrobin
+zookeeper:
+  smart-im:
+    address: 10.211.163.123:2181

@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.smart.service.connet.ConnectProxy;
 import org.springframework.stereotype.Service;
 
 import com.smart.api.address.LoadBalanceStrategy;
-import com.smart.service.biz.ConnectService;
 
 /**
  * @author chenjunlong
@@ -16,12 +16,13 @@ import com.smart.service.biz.ConnectService;
 public class DispatchService {
 
     @Resource
-    private ConnectService connectService;
+    private ConnectProxy connectProxy;
     @Resource
     private LoadBalanceStrategy loadBalanceStrategy;
 
 
     public List<String> getAddress() {
-        return loadBalanceStrategy.build().select(connectService.getConnectAddress());
+        List<String> address = connectProxy.getConnectAddress();
+        return loadBalanceStrategy.getLoadBalance().select(address);
     }
 }
