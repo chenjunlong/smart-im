@@ -1,4 +1,4 @@
-package com.smart.service.connet;
+package com.smart.service.registry;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Optional;
 /**
  * @author chenjunlong
  */
-public interface ConnectService {
+public interface Registry {
 
     /**
      * 注册节点
@@ -30,4 +30,11 @@ public interface ConnectService {
      * @return
      */
     List<String> getConnectAddress();
+
+    /**
+     * 发送心跳
+     * 
+     * @param address
+     */
+    void beatHeart(String address);
 }

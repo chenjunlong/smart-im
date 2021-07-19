@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.smart.service.connet.ConnectProxy;
+import com.smart.service.registry.RegistryProxy;
 import org.springframework.stereotype.Service;
 
 import com.smart.api.address.LoadBalanceStrategy;
@@ -16,13 +16,13 @@ import com.smart.api.address.LoadBalanceStrategy;
 public class DispatchService {
 
     @Resource
-    private ConnectProxy connectProxy;
+    private RegistryProxy registryProxy;
     @Resource
     private LoadBalanceStrategy loadBalanceStrategy;
 
 
     public List<String> getAddress() {
-        List<String> address = connectProxy.getConnectAddress();
+        List<String> address = registryProxy.getConnectAddress();
         return loadBalanceStrategy.getLoadBalance().select(address);
     }
 }

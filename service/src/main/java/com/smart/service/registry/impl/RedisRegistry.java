@@ -1,4 +1,4 @@
-package com.smart.service.connet;
+package com.smart.service.registry.impl;
 
 import com.smart.data.redis.RedisTemplate;
 import com.smart.service.config.RedisConfig;
@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 /**
  * @author chenjunlong
  */
-@Service
-public class RedisConnectService implements ConnectService {
+@Service("redisRegistry")
+public class RedisRegistry extends AbstractRegistry {
 
     @Resource(name = "smartImRedisTemplate")
     private RedisTemplate redisTemplate;
@@ -46,6 +46,11 @@ public class RedisConnectService implements ConnectService {
             return Collections.emptyList();
         }
         return address.stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public void beatHeart(String address) {
+
     }
 
 }
