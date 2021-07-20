@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.smart.service.registry.RegistryProxy;
+import com.smart.biz.registry.RegistryProxy;
 import org.springframework.stereotype.Service;
 
 import com.smart.api.address.LoadBalanceStrategy;

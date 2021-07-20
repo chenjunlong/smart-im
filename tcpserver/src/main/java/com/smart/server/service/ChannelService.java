@@ -2,7 +2,7 @@ package com.smart.server.service;
 
 import com.smart.server.tcp.channel.ChannelRegistry;
 import com.smart.server.tcp.codec.CodecObject;
-import com.smart.service.common.model.Message;
+import com.smart.biz.common.model.Message;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;

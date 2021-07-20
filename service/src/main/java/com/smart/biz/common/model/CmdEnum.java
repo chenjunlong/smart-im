@@ -1,4 +1,4 @@
-package com.smart.service.common.model;
+package com.smart.biz.common.model;
 
 import java.util.Arrays;
 import java.util.Map;

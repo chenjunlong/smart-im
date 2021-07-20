@@ -1,4 +1,4 @@
-package com.smart.service.config;
+package com.smart.biz.config;
 
 import lombok.Setter;
 import org.apache.kafka.clients.producer.KafkaProducer;

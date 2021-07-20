@@ -1,6 +1,6 @@
-package com.smart.service.registry.impl;
+package com.smart.biz.registry.impl;
 
-import com.smart.service.registry.Registry;
+import com.smart.biz.registry.Registry;
 
 /**
  * @author chenjunlong

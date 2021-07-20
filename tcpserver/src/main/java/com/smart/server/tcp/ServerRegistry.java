@@ -1,7 +1,7 @@
 package com.smart.server.tcp;
 
 import com.smart.server.common.constant.Constant;
-import com.smart.service.registry.RegistryProxy;
+import com.smart.biz.registry.RegistryProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

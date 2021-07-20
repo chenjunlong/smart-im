@@ -1,4 +1,4 @@
-package com.smart.service.registry.impl;
+package com.smart.biz.registry.impl;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,6 +1,6 @@
 package com.smart.server.model;
 
-import com.smart.service.common.model.BaseModel;
+import com.smart.biz.common.model.BaseModel;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.smart.service.config;
+package com.smart.biz.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

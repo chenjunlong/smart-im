@@ -1,4 +1,4 @@
-package com.smart.service.registry;
+package com.smart.biz.registry;
 
 import java.util.List;
 import java.util.Optional;

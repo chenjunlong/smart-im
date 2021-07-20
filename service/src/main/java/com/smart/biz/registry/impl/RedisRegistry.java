@@ -1,7 +1,7 @@
-package com.smart.service.registry.impl;
+package com.smart.biz.registry.impl;
 
 import com.smart.data.redis.RedisTemplate;
-import com.smart.service.config.RedisConfig;
+import com.smart.biz.config.RedisConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

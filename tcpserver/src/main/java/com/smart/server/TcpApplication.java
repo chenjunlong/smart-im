@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author chenjunlong
  */
-@SpringBootApplication(scanBasePackages = {"com.smart.server", "com.smart.service", "com.smart.api"})
+@SpringBootApplication(scanBasePackages = {"com.smart.server", "com.smart.biz", "com.smart.api"})
 public class TcpApplication {
 
     public static void main(String[] args) {

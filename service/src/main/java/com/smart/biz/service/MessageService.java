@@ -1,7 +1,9 @@
-package com.smart.service.biz;
+package com.smart.biz.service;
 
-import com.smart.service.common.kafka.Topic;
-import com.smart.service.common.model.Message;
+import java.util.concurrent.Future;
+
+import javax.annotation.Resource;
+
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -9,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.concurrent.Future;
+import com.smart.biz.common.kafka.Topic;
+import com.smart.biz.common.model.Message;
 
 /**
  * @author chenjunlong
@@ -40,5 +42,12 @@ public class MessageService {
             log.error(e.getMessage(), e);
             return false;
         }
+    }
+
+    public boolean comment(long senderId, String receiveId, int boardCast, int cmdId, String content) {
+        // 消息入库
+
+        // 写入消息队列
+        return this.send(senderId, receiveId, boardCast, cmdId, content);
     }
 }

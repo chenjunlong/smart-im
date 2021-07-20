@@ -1,4 +1,4 @@
-package com.smart.service.common.kafka;
+package com.smart.biz.common.kafka;
 
 /**
  * @author chenjunlong

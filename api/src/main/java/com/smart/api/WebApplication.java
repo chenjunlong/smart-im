@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author chenjunlong
  */
-@SpringBootApplication(scanBasePackages = {"com.smart.api", "com.smart.service"})
+@SpringBootApplication(scanBasePackages = {"com.smart.api", "com.smart.biz"})
 public class WebApplication {
 
     public static void main(String[] args) {

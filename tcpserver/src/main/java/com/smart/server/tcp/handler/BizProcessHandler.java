@@ -4,7 +4,7 @@ import com.smart.server.service.ChannelService;
 import com.smart.server.tcp.codec.CodecObject;
 import com.smart.server.tcp.handler.biz.Event;
 import com.smart.server.tcp.handler.biz.EventStrategy;
-import com.smart.service.common.model.CmdEnum;
+import com.smart.biz.common.model.CmdEnum;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

@@ -15,8 +15,8 @@ import com.smart.api.annotation.ResponseLog;
 import com.smart.api.exception.ApiException;
 import com.smart.api.exception.ExcepFactor;
 import com.smart.api.intercepter.auth.BaseInfo;
-import com.smart.service.biz.MessageService;
-import com.smart.service.common.model.CmdEnum;
+import com.smart.biz.service.MessageService;
+import com.smart.biz.common.model.CmdEnum;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,4 +55,15 @@ public class MessageController {
         }
         return messageService.send(senderId, receiveId, boardCast, cmd, content);
     }
+
+    @RequestLog
+    @ResponseLog
+    @BaseInfo(desc = "评论接口", needAuth = true, rateLimit = 1000)
+    @PostMapping(value = "/comment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean comment(@RequestParam(value = "sender_id") @ParamDesc(desc = "发送者uid", range = "long:1~-1") long senderId,
+            @RequestParam(value = "receive_id") @ParamDesc(desc = "接收者uid, *表示所有房间所有人") String receiveId,
+            @RequestParam(value = "content") @ParamDesc(desc = "评论内容") String content) {
+        return messageService.comment(senderId, receiveId, 1, CmdEnum.COMMENT.getCmdId(), content);
+    }
+
 }

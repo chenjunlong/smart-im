@@ -1,4 +1,4 @@
-package com.smart.service.common.model;
+package com.smart.biz.common.model;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;

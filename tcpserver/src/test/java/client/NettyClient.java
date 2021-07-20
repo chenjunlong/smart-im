@@ -13,7 +13,7 @@ import com.smart.server.model.HeartBeatRequest;
 import com.smart.server.tcp.codec.CodecObject;
 import com.smart.server.tcp.codec.SmartDecoder;
 import com.smart.server.tcp.codec.SmartEncoder;
-import com.smart.service.common.model.Message;
+import com.smart.biz.common.model.Message;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;

@@ -14,7 +14,7 @@ smart-im
 
 api: 
     1. 获取tcpserver连接地址
-    2. 投递消息
+    2. 投递消息：p2p消息（自定义业务消息）、广播消息（评论、公告、进场）
     3. 获取运行数据：在线人数
 
 core: 
@@ -24,6 +24,7 @@ core:
     4. api请求日志组件
     5. api异常处理组件
     6. redis api
+    7. mysql api
 
 service:
     1.业务逻辑层，供api、tcpserver依赖
@@ -41,10 +42,18 @@ tcpserver:
 | 获取运行数据| /v1/smart-im/data/summary |
 
 
-#### 开发组件 ####
+#### 已开发的组件 ####
 1. 参数校验：ParamDesc中range支持 int、long、float、double、string
 2. 异常框架：接口增加debug=true参数可以返回，抛异常时写入的附加参数
 3. 限流组件：QpsCounter采用滑动窗口算法实现；通过包扫描初始化，经过Interceptor进行校验
+4. tcp服务发现：通过zk实现
+
+
+#### 待开发部分 ####
+1. 在线数据：TcpServer在线人数上报；在线数据获取接口；进出场事件消息；
+2. 限流组件：api接口限流（已完成）；tcp建连限流
+3. 监控采集：采集系统qps、rt、tcp_connections等数据上报到Prometheus
+4. tcp节点负载均衡算法优化
 
 
 #### docker脚本 ####
@@ -65,18 +74,13 @@ docker exec -it smart-im-tcpserver bash
 ```
 
 
-#### 待开发部分 ####
-1. 在线数据：TcpServer在线人数上报；在线数据获取接口；进出场事件消息；
-2. 限流组件：api接口限流（已完成）；tcp建联限流；
-3. 服务发现：TcpServer服务注册发现机制从redis升级为nacos；
-4. 监控采集：采集系统qps、rt、tcp_connections等数据上报到Prometheus
-
-
 #### 参考资料 ####
 1. sequence消息序列号机制： https://www.infoq.cn/article/wechat-serial-number-generator-architecture
 2. 消息序列化机制：https://github.com/protostuff/protostuff
 3. 限流算法：
-    https://www.cnblogs.com/xuwc/p/9123078.html
-    http://www.teamquest.com/pdfs/whitepaper/ldavg1.pdf
-    http://www.teamquest.com/pdfs/whitepaper/ldavg2.pdf
-    http://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+```
+https://www.cnblogs.com/xuwc/p/9123078.html
+http://www.teamquest.com/pdfs/whitepaper/ldavg1.pdf
+http://www.teamquest.com/pdfs/whitepaper/ldavg2.pdf
+http://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+```
