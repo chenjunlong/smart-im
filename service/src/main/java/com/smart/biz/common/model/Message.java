@@ -1,6 +1,7 @@
 package com.smart.biz.common.model;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -9,28 +10,27 @@ import lombok.ToString;
  * @author chenjunlong
  */
 @Getter
+@Builder
 public class Message extends BaseModel {
 
     private int cmd;
     private Body body;
 
-    public Message build(int cmd, Body body) {
-        this.cmd = cmd;
-        this.body = body;
-        return this;
-    }
-
+    @Builder
+    @Getter
     @ToString
     @EqualsAndHashCode
     public static class Body extends BaseModel {
         @SerializedName("sender_id")
-        public long senderId;
+        private long senderId;
         @SerializedName("receive_id")
-        public String receiveId;
-        @SerializedName("board_cast")
-        public int boardCast;
-        public String content;
-        public long timestamp = System.currentTimeMillis();
+        private String receiveId;
+        @SerializedName("msg_type")
+        private int msgType;
+        @SerializedName("content")
+        private String content;
+        @SerializedName("timestamp")
+        private long timestamp;
     }
 
 }

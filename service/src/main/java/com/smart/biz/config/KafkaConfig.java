@@ -13,6 +13,7 @@ import java.util.Properties;
 
 /**
  * @author chenjunlong
+ * https://cwiki.apache.org/confluence/display/KAFKA/KIP-19+-+Add+a+request+timeout+to+NetworkClient
  */
 @Setter
 @Configuration
@@ -27,6 +28,8 @@ public class KafkaConfig {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, this.smartImBootstrapServer);
         props.put(ProducerConfig.ACKS_CONFIG, "1");
         props.put(ProducerConfig.RETRIES_CONFIG, 3);
+        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 1000); // 客户端等待时长
+        props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 1000); // 生产者阻止缓冲时间，序列化时间
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
         props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
@@ -36,7 +39,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public Producer<String, String> smartImKafkaProducer(@Qualifier("smartImKafkaProducerConfig") Properties props) {
+    public KafkaProducer<String, String> smartImKafkaProducer(@Qualifier("smartImKafkaProducerConfig") Properties props) {
         return new KafkaProducer(props);
     }
 }
