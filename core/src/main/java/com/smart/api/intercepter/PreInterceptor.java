@@ -1,15 +1,17 @@
 package com.smart.api.intercepter;
 
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.smart.api.intercepter.constant.Constant;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.google.common.collect.Maps;
+import com.smart.api.intercepter.constant.Constant;
 import com.smart.api.intercepter.request.RequestThreadLocal;
 
 /**
@@ -21,8 +23,10 @@ public class PreInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        MDC.put(Constant.RID, UUID.randomUUID().toString().replace("-", ""));
-        MDC.put(Constant.STIME, String.valueOf(System.currentTimeMillis()));
+        Map<String, String> map = Maps.newHashMap();
+        map.put(Constant.RID, UUID.randomUUID().toString().replace("-", ""));
+        map.put(Constant.STIME, String.valueOf(System.currentTimeMillis()));
+        MDC.setContextMap(map);
 
         RequestThreadLocal.setRequest(request);
         RequestThreadLocal.setRequestPath(request.getRequestURI());
@@ -42,11 +46,6 @@ public class PreInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        removeMDC();
-    }
-
-    private void removeMDC() {
-        MDC.remove(Constant.RID);
-        MDC.remove(Constant.STIME);
+        MDC.clear();
     }
 }

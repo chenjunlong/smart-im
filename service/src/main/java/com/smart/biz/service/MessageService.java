@@ -1,20 +1,24 @@
 package com.smart.biz.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Resource;
 
-import com.smart.biz.common.model.Comment;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import com.smart.biz.common.kafka.Topic;
+import com.smart.biz.common.model.Comment;
 import com.smart.biz.common.model.Message;
 import com.smart.biz.dao.CommentDao;
 
@@ -48,12 +52,31 @@ public class MessageService {
     }
 
     public boolean comment(long senderId, String receiveId, int msgType, int cmdId, String content) {
-        // 评论入库
-        Comment comment = Comment.builder().senderId(senderId).receiveId(receiveId).content(content).build();
-        commentDao.createComment(comment);
+        Map<String, String> map = MDC.getCopyOfContextMap();
 
-        // 写入消息队列
-        return this.send(senderId, receiveId, msgType, cmdId, content);
+        // 评论入库
+        CompletableFuture<Boolean> createCommentFuture = CompletableFuture.supplyAsync(() -> {
+            MDC.setContextMap(map);
+            Comment comment = Comment.builder().senderId(senderId).receiveId(receiveId).content(content).build();
+            boolean result = commentDao.createComment(comment);
+            MDC.clear();
+            return result;
+        });
+
+        // 发送评论消息
+        CompletableFuture<Boolean> sendCommentFuture = CompletableFuture.supplyAsync(() -> {
+            MDC.setContextMap(map);
+            boolean result = send(senderId, receiveId, msgType, cmdId, content);
+            MDC.clear();
+            return result;
+        });
+
+        AtomicBoolean result = new AtomicBoolean(true);
+        createCommentFuture.whenComplete((v, t) -> result.set(result.get() & v));
+        sendCommentFuture.whenComplete((v, t) -> result.set(result.get() & v));
+
+        CompletableFuture.allOf(createCommentFuture, sendCommentFuture).join();
+        return result.get();
     }
 
     public List<Comment> getLastCommentList(String roomId) {

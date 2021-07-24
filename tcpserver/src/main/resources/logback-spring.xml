@@ -94,11 +94,11 @@
         </layout>
     </appender>
 
-    <!-- tcp断连日志 -->
-    <appender name="disconnet" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_PATH}/disconnet.log</File>
+    <!-- tcp连接日志 -->
+    <appender name="connect" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/connect.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/archive/disconnet-%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/archive/connect-%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>

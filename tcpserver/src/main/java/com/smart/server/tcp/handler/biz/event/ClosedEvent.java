@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
+import com.smart.biz.common.model.em.CloseTypeEnum;
 import com.smart.server.model.DisconnectRequest;
 import com.smart.server.service.ChannelService;
 import com.smart.server.tcp.codec.CodecObject;
@@ -24,11 +25,6 @@ public class ClosedEvent extends AbstractEvent {
 
     @Override
     public void execute(ChannelHandlerContext ctx, CodecObject codecObject) {
-        DisconnectRequest disconnectRequest = DisconnectRequest.parseFromPb(codecObject.body, DisconnectRequest.class);
-        String roomId = disconnectRequest.getRoomId();
-        Long uid = disconnectRequest.getUid();
-
-        channelService.disconnet(ctx, "CLOSED");
-        log.info(String.format("[closed %s:%s] roomId:%s, uid:%s exit.", getClientIp(), getClientPort(), roomId, uid));
+        channelService.disconnect(ctx, CloseTypeEnum.NORMAL.getType());
     }
 }

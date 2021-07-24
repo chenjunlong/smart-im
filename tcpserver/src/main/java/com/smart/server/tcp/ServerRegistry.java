@@ -1,15 +1,20 @@
 package com.smart.server.tcp;
 
-import com.smart.server.common.constant.Constant;
-import com.smart.biz.registry.RegistryProxy;
-import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import com.smart.biz.registry.RegistryProxy;
+import com.smart.server.common.constant.Constant;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author chenjunlong
@@ -18,7 +23,9 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ServerRegistry {
 
-    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService scheduledExecutorService =
+            new ScheduledThreadPoolExecutor(1, new BasicThreadFactory.Builder().namingPattern("ServerRegistry-schedule-pool-%d").daemon(true).build());
+
 
     @Value("${tcpserver.port}")
     private int port;
@@ -28,20 +35,8 @@ public class ServerRegistry {
 
 
     public ServerRegistry() {
-        this.beatHeart();
-    }
-
-    /**
-     * 每10s发送心跳包到zk
-     */
-    public void beatHeart() {
-        this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                String address = Constant.LOCAL_IP + ":" + port;
-                registryProxy.beatHeart(address);
-            }
-        }, 10, 10, TimeUnit.SECONDS);
+        // 每10s发送心跳包到zk
+        this.scheduledExecutorService.scheduleAtFixedRate(() -> registryProxy.beatHeart(getAddress()), 10, 10, TimeUnit.SECONDS);
     }
 
     /**
@@ -50,8 +45,7 @@ public class ServerRegistry {
      * @return
      */
     public boolean register() {
-        String address = Constant.LOCAL_IP + ":" + port;
-        return registryProxy.register(address).isPresent();
+        return registryProxy.register(getAddress()).isPresent();
     }
 
     /**
@@ -60,8 +54,11 @@ public class ServerRegistry {
      * @return
      */
     public boolean unregister() {
-        String address = Constant.LOCAL_IP + ":" + port;
-        return registryProxy.unregister(address).isPresent();
+        return registryProxy.unregister(getAddress()).isPresent();
     }
 
+
+    private String getAddress() {
+        return StringUtils.joinWith(":", Constant.LOCAL_IP, port);
+    }
 }

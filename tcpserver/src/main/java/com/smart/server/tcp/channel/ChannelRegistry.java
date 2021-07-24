@@ -1,17 +1,20 @@
 package com.smart.server.tcp.channel;
 
-import com.google.common.collect.Multimaps;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-import io.netty.channel.Channel;
-import io.netty.util.AttributeKey;
-
+import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Multimaps;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
+import com.smart.biz.common.model.em.MsgTypeEnum;
+
+import io.netty.channel.Channel;
+import io.netty.util.AttributeKey;
 
 /**
  * @author chenjunlong
@@ -93,13 +96,13 @@ public class ChannelRegistry {
      * 获取房间用户
      *
      * @param receiveId
-     * @param boardCast
+     * @param msgType
      * @return
      */
-    public static Set<Long> getUids(String receiveId, int boardCast) {
-        if (boardCast == 1 && receiveId.equals("*")) {
+    public static Set<Long> getUids(String receiveId, int msgType) {
+        if (msgType == MsgTypeEnum.BOARD_CAST.getType()) {
             return ChannelRegistry.getAllUid();
-        } else if (boardCast == 1) {
+        } else if (msgType == MsgTypeEnum.ROOM.getType()) {
             return ChannelRegistry.getUidByRoomId(receiveId);
         } else {
             return Sets.newHashSet(Long.parseLong(receiveId));
@@ -148,6 +151,14 @@ public class ChannelRegistry {
 
         public static String getRoomId(Channel channel) {
             return channel.attr(ROOM_ID).get();
+        }
+
+        public static String getClientIp(Channel channel) {
+            return ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
+        }
+
+        public static int getPort(Channel channel) {
+            return ((InetSocketAddress) channel.remoteAddress()).getPort();
         }
     }
 

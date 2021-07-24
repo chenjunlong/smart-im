@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class MessageConsumer extends BaseConsumer<String, String> {
 
-    private static final ExecutorService pool = new ThreadPoolExecutor(16, 16, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue(200),
+    private static final ExecutorService pool = new ThreadPoolExecutor(16, 16, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue(1024),
             new ThreadFactoryBuilder().setNameFormat("MessageConsumerPool").build(), new ThreadPoolExecutor.CallerRunsPolicy());
 
     @Value("${kafka.smart-im.bootstrap-server}")
@@ -67,7 +67,7 @@ public class MessageConsumer extends BaseConsumer<String, String> {
         if (consumerRecord == null) {
             return;
         }
-
+        
         Message message = Message.parseFromJson(consumerRecord.value(), Message.class);
         channelService.send(message);
     }

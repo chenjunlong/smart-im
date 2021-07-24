@@ -1,5 +1,6 @@
 package com.smart.server.tcp.handler;
 
+import com.smart.biz.common.model.em.CloseTypeEnum;
 import com.smart.server.service.ChannelService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -24,7 +25,7 @@ public class ServerIdleStateHandler extends ChannelInboundHandlerAdapter {
         if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {
             IdleStateEvent event = (IdleStateEvent) evt;
             if (event.state() == IdleState.READER_IDLE) {
-                channelService.disconnet(ctx, "ServerIdleStateHandler");
+                channelService.disconnect(ctx, CloseTypeEnum.HEART_BEAT_TIMEOUT.getType());
             }
         }
     }

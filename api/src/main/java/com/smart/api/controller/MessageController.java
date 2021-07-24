@@ -75,7 +75,7 @@ public class MessageController {
     }
 
     /**
-     * curl --request GET
+     * curl --request GET \
      * 'http://localhost:8000/v1/smart-im/message/show/last_comment?room_id=room1001'
      */
     @RequestLog

@@ -1,5 +1,6 @@
 package com.smart.server.tcp.handler;
 
+import com.smart.biz.common.model.em.CloseTypeEnum;
 import com.smart.server.service.ChannelService;
 import com.smart.server.tcp.codec.CodecObject;
 import com.smart.server.tcp.handler.biz.Event;
@@ -31,7 +32,7 @@ public class BizProcessHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) {
-        channelService.disconnet(ctx, "channelUnregistered");
+        channelService.disconnect(ctx, CloseTypeEnum.CLIENT.getType());
     }
 
     /**
