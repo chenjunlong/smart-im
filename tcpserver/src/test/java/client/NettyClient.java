@@ -1,8 +1,10 @@
 package client;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.smart.server.model.DisconnectRequest;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
@@ -66,7 +68,7 @@ public class NettyClient {
         public void channelUnregistered(ChannelHandlerContext ctx) {
             // 启动线程重新连接
             System.out.println("重新开始连接...");
-            ctx.channel().eventLoop().schedule(() -> doConnect(ctx), 10, TimeUnit.SECONDS);
+            doConnect(ctx);
         }
 
         // 读取数据
@@ -76,6 +78,8 @@ public class NettyClient {
             if (codecObject.cmd == 101) {
                 Message.Body body = Message.Body.parseFromPb(codecObject.body, Message.Body.class);
                 System.out.println(String.format("接受到server响应数据, cmd:%s, body:%s", codecObject.cmd, body.toString()));
+            } else {
+                System.out.println(String.format("接受到server响应数据, cmd:%s, seq:%s", codecObject.cmd, codecObject.seq));
             }
         }
 
@@ -83,7 +87,8 @@ public class NettyClient {
         @Override
         public void channelActive(ChannelHandlerContext ctx) {
             this.doConnect(ctx);
-            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> this.doHeartBeat(ctx), 10, 10, TimeUnit.SECONDS);
+            // Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> this.doHeartBeat(ctx), 10, 10, TimeUnit.SECONDS);
+            // Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> this.disConnect(ctx), 30, 30, TimeUnit.SECONDS);
         }
 
         @Override
@@ -115,11 +120,23 @@ public class NettyClient {
             heartBeatReq.body = heartBeatRequest.toPb();
             ctx.writeAndFlush(heartBeatReq);
         }
+
+        private void disConnect(ChannelHandlerContext ctx) {
+            DisconnectRequest disconnectRequest = new DisconnectRequest();
+            disconnectRequest.setRoomId(roomId);
+            disconnectRequest.setUid(uid);
+
+            CodecObject disconnReq = new CodecObject();
+            disconnReq.cmd = 2;
+            disconnReq.seq = System.currentTimeMillis();
+            disconnReq.body = disconnectRequest.toPb();
+            ctx.writeAndFlush(disconnReq);
+        }
     }
 
     public static void main(String[] args) throws Exception {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
-        String response = restTemplate.getForObject("http://10.211.163.123:8000/v1/smart-im/dispatch/connect_address", String.class);
+        String response = restTemplate.getForObject("http://192.168.0.101:8000/v1/smart-im/dispatch/connect_address", String.class);
         String address = JsonParser.parseString(response).getAsJsonObject().getAsJsonArray("body").get(0).getAsString();
 
         String ip = address.split(":")[0];

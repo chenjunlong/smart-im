@@ -30,9 +30,9 @@ public enum CmdEnum {
      */
     CLOSED(2, "closedEvent"),
     /**
-     * 系统消息
+     * 长连接限流
      */
-    SYSTEM(3, ""),
+    CONNECT_REFUSED_LIMIT(3, ""),
     /**
      * 业务自定义消息
      */
@@ -40,7 +40,11 @@ public enum CmdEnum {
     /**
      * 评论消息
      */
-    COMMENT(101, "");
+    COMMENT(101, ""),
+    /**
+     * 系统消息
+     */
+    SYSTEM(102, "");
 
 
     private final int cmdId;
@@ -55,5 +59,6 @@ public enum CmdEnum {
     public static boolean isValid(int cmd) {
         return valueOf(cmd) == null ? false : true;
     }
+
 
 }

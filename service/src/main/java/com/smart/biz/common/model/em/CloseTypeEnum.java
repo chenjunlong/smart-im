@@ -11,7 +11,7 @@ import lombok.Getter;
 public enum CloseTypeEnum {
 
     /**
-     * 客户端主动关闭
+     * 业务主动关闭
      */
     NORMAL(1),
     /**
@@ -19,7 +19,7 @@ public enum CloseTypeEnum {
      */
     HEART_BEAT_TIMEOUT(2),
     /**
-     * 客户端断开
+     * 网络层关闭
      */
     CLIENT(3);
 

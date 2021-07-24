@@ -47,10 +47,10 @@ tcpserver:
 2. 异常框架：接口增加debug=true参数可以返回，抛异常时写入的附加参数
 3. 限流组件：QpsCounter采用滑动窗口算法实现；通过包扫描初始化，经过Interceptor进行校验
 4. tcp服务发现：通过zk实现
-
+5. 进出场事件消息：发送kafka消息，topic：smart.im.message.inout
 
 #### 待开发部分 ####
-1. 在线数据：TcpServer在线人数上报；在线数据获取接口；进出场事件消息；
+1. 在线数据：TcpServer在线人数上报；在线数据获取接口；
 2. 限流组件：api接口限流（已完成）；tcp建连限流
 3. 监控采集：采集系统qps、rt、tcp_connections等数据上报到Prometheus
 4. tcp节点负载均衡算法优化

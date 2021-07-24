@@ -28,7 +28,7 @@ public class ChannelRegistry {
     private static final ConcurrentHashMap<Long, Channel> userChannel = new ConcurrentHashMap<>();
 
     /**
-     * room -> user
+     * roomId -> uid
      * 存储房间和用户的映射关系
      */
     private static final SetMultimap<String, Long> roomUser =

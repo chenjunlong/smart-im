@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,9 @@ public class ChannelService {
         Channel channel = ctx.channel();
         String roomId = ChannelRegistry.ChannelAttribute.getRoomId(channel);
         Long uid = ChannelRegistry.ChannelAttribute.getUid(channel);
+        if (StringUtils.isBlank(roomId) && uid == 0L) {
+            return;
+        }
 
 
         // 移除连接
