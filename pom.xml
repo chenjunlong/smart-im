@@ -19,6 +19,7 @@
         <module>tcpserver</module>
         <module>service</module>
         <module>core</module>
+        <module>benchmark</module>
     </modules>
 
     <properties>

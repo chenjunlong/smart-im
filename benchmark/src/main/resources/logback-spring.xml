@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
-    <!--<property name="LOG_PATH" value="/Users/chenjunlong/Downloads/logs/tcpserver"/>-->
-    <property name="LOG_PATH" value="/workspace/service/tcpserver/logs"/>
+   <!-- <property name="LOG_PATH" value="/workspace/service/benchmark/logs/"/>-->
+    <property name="LOG_PATH" value="/Users/chenjunlong/Downloads/logs/benchmark/"/>
+
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -66,67 +67,15 @@
         </layout>
     </appender>
 
-    <appender name="kafka" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_PATH}/kafka.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/archive/kafka-%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
-        </layout>
-    </appender>
-
-    <appender name="jedis" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_PATH}/jedis.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/archive/jedis-%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level %logger{20}: %m,r=%X{rid}%n</Pattern>
-        </layout>
-    </appender>
-
-    <!-- tcp连接日志 -->
-    <appender name="connect" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_PATH}/connect.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/archive/connect-%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m,r=%X{rid}%n</Pattern>
-        </layout>
-    </appender>
-
 
     <logger name="com.smart" level="info" additivity="false">
         <appender-ref ref="info"/>
         <appender-ref ref="warn"/>
         <appender-ref ref="error"/>
     </logger>
-    <logger name="org.apache.kafka" level="info" additivity="false">
-        <appender-ref ref="kafka"/>
-    </logger>
-    <logger name="redis.clients.jedis" level="info" additivity="false">
-        <appender-ref ref="jedis"/>
-    </logger>
-    <logger name="connect" level="info" additivity="false">
-        <appender-ref ref="connect"/>
-    </logger>
 
 
     <root level="info">
-        <!--<appender-ref ref="console"/>-->
+        <appender-ref ref="console"/>
     </root>
 </configuration>

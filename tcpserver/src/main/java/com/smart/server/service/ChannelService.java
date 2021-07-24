@@ -23,6 +23,7 @@ import com.smart.server.tcp.codec.CodecObject;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StopWatch;
 
 /**
  * @author chenjunlong
@@ -129,8 +130,10 @@ public class ChannelService {
             return;
         }
 
-        userSet.parallelStream().filter(uid -> Objects.nonNull(ChannelRegistry.getChannelByUid(uid))).forEach(uid -> {
+        StopWatch sw = new StopWatch();
+        sw.start("下推数据");
 
+        userSet.stream().filter(uid -> Objects.nonNull(ChannelRegistry.getChannelByUid(uid))).forEach(uid -> {
             CodecObject codecObject = new CodecObject();
             codecObject.cmd = message.getCmd();
             codecObject.seq = System.nanoTime();
@@ -138,6 +141,10 @@ public class ChannelService {
 
             ChannelRegistry.getChannelByUid(uid).writeAndFlush(codecObject);
         });
+
+        sw.stop();
+
+        log.info(sw.prettyPrint());
     }
 
 

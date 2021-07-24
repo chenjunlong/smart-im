@@ -42,7 +42,7 @@ public class BizProcessHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        log.info("channelActive");
+        // log.info("channelActive");
     }
 
     /**
@@ -52,7 +52,7 @@ public class BizProcessHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        log.info("channelInactive");
+        // log.info("channelInactive");
     }
 
     /**
