@@ -3,6 +3,7 @@ spring:
     name: tcpserver
   profiles:
     active: online
+    include: service
 server:
   port: 8001
   tomcat:
@@ -18,22 +19,3 @@ tcpserver:
   port: 7001
   boss-threads: 1
   worker-threads: 16
-kafka:
-  smart-im:
-    bootstrap-server: 10.211.163.123:9092
-redis:
-  smart-im:
-    jedis-pool-config:
-      minIdle: 5
-      maxIdle: 10
-      maxTotal: 10
-      maxWaitMillis: 1000
-      minEvictableIdleTimeMillis: 9000
-      timeBetweenEvictionRunsMillis: 6000
-    jedis-config:
-      host: 10.211.163.123
-      port: 6379
-      timeout: 2000
-zookeeper:
-  smart-im:
-    address: 10.211.163.123:2181

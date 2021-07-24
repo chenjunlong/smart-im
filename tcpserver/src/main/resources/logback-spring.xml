@@ -121,8 +121,8 @@
     <logger name="redis.clients.jedis" level="info" additivity="false">
         <appender-ref ref="jedis"/>
     </logger>
-    <logger name="disconnet" level="info" additivity="false">
-        <appender-ref ref="disconnet"/>
+    <logger name="connect" level="info" additivity="false">
+        <appender-ref ref="connect"/>
     </logger>
 
 

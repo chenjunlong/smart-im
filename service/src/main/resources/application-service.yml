@@ -1,0 +1,66 @@
+spring:
+  shardingsphere:
+    enabled: true
+    datasource:
+      names: comment
+      comment:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://10.211.163.123:3306/comment?useUnicode=true&characterEncoding=utf8&charset=utf8mb4&autoReconnect=true
+        username: root
+        password: 123456
+        async-init: true
+        keep-alive: true
+        filters: stat,wall,logback
+        initial-size: 5
+        min-idle: 5
+        max-active: 10
+        max-wait: 6000
+        validation-query: SELECT 'x'
+        test-on-borrow: false
+        test-on-return: false
+        test-while-idle: true
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        remove-abandoned: false
+        log-abandoned: true
+        filter:
+          stat:
+            enabled: true
+            log-slow-sql: true
+    props:
+      sql:
+        show: true
+    sharding:
+      tables:
+        t_comment:
+          key-generator:
+            column: message_id
+            type: SNOWFLAKE
+            props:
+              worker:
+                id: 1
+          actual-data-nodes: comment.t_comment_$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: sender_id
+              algorithm-expression: t_comment_$->{sender_id % 2}
+kafka:
+  smart-im:
+    bootstrap-server: 10.211.163.123:9092
+redis:
+  smart-im:
+    jedis-pool-config:
+      minIdle: 5
+      maxIdle: 10
+      maxTotal: 10
+      maxWaitMillis: 1000
+      minEvictableIdleTimeMillis: 9000
+      timeBetweenEvictionRunsMillis: 6000
+    jedis-config:
+      host: 10.211.163.123
+      port: 6379
+      timeout: 2000
+zookeeper:
+  smart-im:
+    address: 10.211.163.123:2181
