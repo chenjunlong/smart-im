@@ -29,7 +29,12 @@ JAVA_OPTS="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true"
 JAVA_MEM_OPTS=" -server -Xmx1g -Xms1g -Xmn512m -XX:MaxMetaspaceSize=512m -Xss512k -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSCompactAtFullCollection -XX:LargePageSizeInBytes=128m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -Xloggc:$LOGS_DIR/gc.log"
 
 echo -e "Starting the ${DEPLOY_DIR} ...\c"
-java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.server.TcpApplication >$STDOUT_FILE
+if [ "$MODE" = "docker" ]; then
+  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.server.TcpApplication >$STDOUT_FILE
+else
+  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.server.TcpApplication >$STDOUT_FILE 2>&1 &
+fi
+
 echo $! >$PID_FILE
 
 echo "OK!"
