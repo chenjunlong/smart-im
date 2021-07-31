@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 import com.smart.biz.common.model.Comment;
 
 /**
- * 消息存储
+ * 评论消息存储
+ * message_id纬度分表
  * 
  * @author chenjunlong
  */

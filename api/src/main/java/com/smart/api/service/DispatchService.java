@@ -15,7 +15,7 @@ import com.smart.api.address.LoadBalanceStrategy;
 @Service
 public class DispatchService {
 
-    @Resource
+    @Resource(name = "tcpRegistryProxy")
     private RegistryProxy registryProxy;
     @Resource
     private LoadBalanceStrategy loadBalanceStrategy;

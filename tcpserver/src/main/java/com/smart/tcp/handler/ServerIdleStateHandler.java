@@ -1,9 +1,9 @@
-package com.smart.server.tcp.handler;
+package com.smart.tcp.handler;
 
 import com.smart.biz.common.model.em.CloseTypeEnum;
 import com.smart.biz.common.model.em.CmdEnum;
 import com.smart.server.service.ChannelService;
-import com.smart.server.tcp.codec.CodecObject;
+import com.smart.tcp.codec.CodecObject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;

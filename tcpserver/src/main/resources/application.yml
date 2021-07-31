@@ -19,3 +19,5 @@ tcpserver:
   port: 7001
   boss-threads: 1
   worker-threads: 16
+udpserver:
+  port: 7999

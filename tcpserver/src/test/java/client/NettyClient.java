@@ -9,13 +9,12 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.JsonParser;
-import com.smart.biz.common.model.Message;
 import com.smart.server.model.ConnectRequest;
 import com.smart.server.model.DisconnectRequest;
 import com.smart.server.model.HeartBeatRequest;
-import com.smart.server.tcp.codec.CodecObject;
-import com.smart.server.tcp.codec.SmartDecoder;
-import com.smart.server.tcp.codec.SmartEncoder;
+import com.smart.tcp.codec.CodecObject;
+import com.smart.tcp.codec.SmartDecoder;
+import com.smart.tcp.codec.SmartEncoder;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;

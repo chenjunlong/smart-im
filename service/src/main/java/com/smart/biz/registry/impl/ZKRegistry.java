@@ -4,15 +4,11 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
 import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.CreateMode;
-import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
@@ -22,38 +18,37 @@ import lombok.extern.slf4j.Slf4j;
  * @author chenjunlong
  */
 @Slf4j
-@Service("zkRegistry")
 public class ZKRegistry extends AbstractRegistry {
 
     private static final Gson gson = new Gson();
 
-    // tcp_server 注册到zk_server 的根结点
-    private static final String rootPath = "/tcp_server_node_address";
+    /**
+     * key => 服务节点IP, value => 心跳上报时间
+     */
+    private Map<String, Long> localRegistryMap = new ConcurrentHashMap<>();
 
-    // key => 服务节点IP, value => 心跳上报时间
-    private static Map<String, Long> localRegistryMap = new ConcurrentHashMap<>();
+    /**
+     * 记录创建过的监听器
+     */
+    private Set<String> watchRunnableRegistry = new HashSet<>();
 
-    // 记录创建过的监听器
-    private static Set<String> watchRunnableRegistry = new HashSet<>();
+    /**
+     * 服务注册的根结点
+     */
+    private String rootPath;
 
-
-    @Resource(name = "smartImZkClient")
     private ZkClient zkClient;
 
-
-    @PostConstruct
-    private void init() {
+    public ZKRegistry(String rootPath, ZkClient zkClient) {
+        this.rootPath = rootPath;
+        this.zkClient = zkClient;
+        this.initZKParentNode();
         this.initZkData();
         this.watchZkData();
     }
 
     @Override
     public Optional<Boolean> register(String subPath) {
-        if (!zkClient.exists(rootPath)) {
-            long data = System.currentTimeMillis();
-            zkClient.create(rootPath, data, CreateMode.PERSISTENT);
-        }
-
         String path = this.serverPath(subPath);
         if (!zkClient.exists(path)) {
             long lastUpdateTime = System.currentTimeMillis();
@@ -90,6 +85,16 @@ public class ZKRegistry extends AbstractRegistry {
      */
     private String serverPath(String server) {
         return StringUtils.joinWith("/", rootPath, server);
+    }
+
+    /**
+     * 初始化root节点
+     */
+    private void initZKParentNode() {
+        if (!zkClient.exists(rootPath)) {
+            long data = System.currentTimeMillis();
+            zkClient.create(rootPath, data, CreateMode.PERSISTENT);
+        }
     }
 
     /**

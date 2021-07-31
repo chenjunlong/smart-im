@@ -41,9 +41,5 @@ public class RedisConfig {
         return new RedisTemplate(jedisPool);
     }
 
-
-    public static class Key {
-        public static final String TCP_SERVER_NODE_ADDRESS = "tcp.server.node.address";
-    }
 }
 

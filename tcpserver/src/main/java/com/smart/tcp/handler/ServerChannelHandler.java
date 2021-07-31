@@ -1,13 +1,13 @@
-package com.smart.server.tcp.handler;
+package com.smart.tcp.handler;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
 import com.smart.server.service.ChannelService;
-import com.smart.server.tcp.codec.SmartDecoder;
-import com.smart.server.tcp.codec.SmartEncoder;
-import com.smart.server.tcp.handler.biz.EventStrategy;
+import com.smart.tcp.codec.SmartDecoder;
+import com.smart.tcp.codec.SmartEncoder;
+import com.smart.tcp.handler.biz.EventStrategy;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;

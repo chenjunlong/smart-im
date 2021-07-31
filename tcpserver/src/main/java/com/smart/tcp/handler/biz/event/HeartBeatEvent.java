@@ -1,12 +1,11 @@
-package com.smart.server.tcp.handler.biz.event;
+package com.smart.tcp.handler.biz.event;
 
 import com.smart.biz.common.model.em.CmdEnum;
 import com.smart.server.service.ChannelService;
-import com.smart.server.tcp.channel.ChannelRegistry;
 import org.springframework.stereotype.Component;
 
-import com.smart.server.tcp.codec.CodecObject;
-import com.smart.server.tcp.handler.biz.AbstractEvent;
+import com.smart.tcp.codec.CodecObject;
+import com.smart.tcp.handler.biz.AbstractEvent;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;

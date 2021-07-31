@@ -37,14 +37,11 @@ spring:
           key-generator:
             column: message_id
             type: SNOWFLAKE
-            props:
-              worker:
-                id: 1
           actual-data-nodes: comment.t_comment_$->{0..1}
           table-strategy:
-            inline:
-              sharding-column: sender_id
-              algorithm-expression: t_comment_$->{sender_id % 2}
+            standard:
+              sharding-column: receive_id
+              precise-algorithm-class-name: com.smart.biz.dao.strategy.StringKeyPreciseShardingAlgorithm
 kafka:
   smart-im:
     bootstrap-server: 10.211.163.123:9092

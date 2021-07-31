@@ -1,6 +1,6 @@
-package com.smart.server.tcp.handler.biz;
+package com.smart.tcp.handler.biz;
 
-import com.smart.server.tcp.codec.CodecObject;
+import com.smart.tcp.codec.CodecObject;
 
 import io.netty.channel.ChannelHandlerContext;
 

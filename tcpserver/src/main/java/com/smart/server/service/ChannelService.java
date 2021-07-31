@@ -17,8 +17,8 @@ import com.smart.biz.common.model.UserInOutMessage;
 import com.smart.biz.common.model.em.CmdEnum;
 import com.smart.server.model.ConnectRequest;
 import com.smart.server.model.HeartBeatRequest;
-import com.smart.server.tcp.channel.ChannelRegistry;
-import com.smart.server.tcp.codec.CodecObject;
+import com.smart.tcp.channel.ChannelRegistry;
+import com.smart.tcp.codec.CodecObject;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -31,6 +31,7 @@ import org.springframework.util.StopWatch;
 @Service
 @Slf4j(topic = "connect")
 public class ChannelService {
+
 
     @Resource(name = "smartImKafkaProducer")
     private KafkaProducer smartImKafkaProducer;

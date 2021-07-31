@@ -3,6 +3,8 @@ set -e
 cd $(dirname "$0")
 cd ..
 
+MODE="$1"
+
 DEPLOY_DIR=$(pwd)
 PID_FILE=${DEPLOY_DIR}/pid
 if [[ ! -f ${PID_FILE} ]]; then
@@ -29,10 +31,15 @@ JAVA_OPTS="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true"
 JAVA_MEM_OPTS=" -server -Xmx1g -Xms1g -Xmn512m -XX:MaxMetaspaceSize=512m -Xss512k -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSCompactAtFullCollection -XX:LargePageSizeInBytes=128m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -Xloggc:$LOGS_DIR/gc.log"
 
 echo -e "Starting the ${DEPLOY_DIR} ...\c"
-if [ "$MODE" = "docker" ]; then
-  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.server.TcpApplication >$STDOUT_FILE
+
+if [ "$MODE" = "ws_docker" ]; then
+  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.WsApplication >$STDOUT_FILE
+elif [ "$MODE" = "ws" ]; then
+  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.WsApplication >$STDOUT_FILE 2>&1 &
+elif [ "$MODE" = "tcp_docker" ]; then
+  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.TcpApplication >$STDOUT_FILE
 else
-  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.server.TcpApplication >$STDOUT_FILE 2>&1 &
+  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.TcpApplication >$STDOUT_FILE 2>&1 &
 fi
 
 echo $! >$PID_FILE

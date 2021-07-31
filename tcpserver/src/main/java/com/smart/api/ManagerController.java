@@ -1,6 +1,6 @@
 package com.smart.api;
 
-import com.smart.server.tcp.channel.ChannelRegistry;
+import com.smart.tcp.channel.ChannelRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.smart.server.tcp.handler.biz;
+package com.smart.tcp.handler.biz;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.smart.server.tcp.codec;
+package com.smart.tcp.codec;
 
 /**
  * @author chenjunlong

@@ -42,6 +42,14 @@ public class MessageController {
      * --data-urlencode 'msg_type=1' \
      * --data-urlencode 'cmd=101' \
      * --data-urlencode 'content=test message'
+     * 
+     * 
+     * curl --request POST 'http://localhost:8000/v1/smart-im/message/send' \
+     * --data-urlencode 'sender_id=1001' \
+     * --data-urlencode 'receive_id=1002' \
+     * --data-urlencode 'msg_type=0' \
+     * --data-urlencode 'cmd=101' \
+     * --data-urlencode 'content=p2p message'
      */
     @RequestLog
     @ResponseLog
@@ -71,7 +79,7 @@ public class MessageController {
     public boolean comment(@RequestParam(value = "sender_id") @ParamDesc(desc = "发送者uid", range = "long:1~-1") long senderId,
             @RequestParam(value = "receive_id") @ParamDesc(desc = "接收者") String receiveId,
             @RequestParam(value = "content") @ParamDesc(desc = "评论内容") String content) {
-        return messageService.comment(senderId, receiveId, MsgTypeEnum.ROOM.getType(), CmdEnum.COMMENT.getCmdId(), content);
+        return messageService.comment(senderId, receiveId, content);
     }
 
     /**
