@@ -1,5 +1,7 @@
 package com.smart.tcp.codec;
 
+import com.smart.biz.common.model.Message;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -15,19 +17,24 @@ public class SmartDecoder extends LengthFieldBasedFrameDecoder {
 
     @Override
     protected Object decode(ChannelHandlerContext ctx, ByteBuf in) {
+
         if (in == null) {
             return null;
         }
 
-        CodecObject codecObject = new CodecObject();
-        codecObject.cmd = in.readInt();
-        codecObject.seq = in.readLong();
-        int bodyLen = in.readInt();
 
+        Message message = Message.builder().build();
+        message.setVersion(in.readInt());
+        message.setCmd(in.readInt());
+        message.setSeq(in.readLong());
+
+        int bodyLen = in.readInt();
         if (bodyLen > 0) {
-            codecObject.body = new byte[bodyLen];
-            in.readBytes(codecObject.body);
+            byte[] body = new byte[bodyLen];
+            in.readBytes(body);
+            message.setBody(body);
         }
-        return codecObject;
+
+        return message;
     }
 }

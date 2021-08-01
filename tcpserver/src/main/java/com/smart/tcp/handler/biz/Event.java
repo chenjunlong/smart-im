@@ -1,6 +1,6 @@
 package com.smart.tcp.handler.biz;
 
-import com.smart.tcp.codec.CodecObject;
+import com.smart.biz.common.model.Message;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
@@ -12,8 +12,8 @@ public interface Event {
      * 事件处理器
      *
      * @param ctx
-     * @param codecObject
+     * @param message
      */
-    void onEvent(ChannelHandlerContext ctx, CodecObject codecObject);
+    void onEvent(ChannelHandlerContext ctx, Message message);
 
 }

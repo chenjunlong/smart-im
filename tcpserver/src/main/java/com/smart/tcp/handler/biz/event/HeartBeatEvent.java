@@ -1,16 +1,16 @@
 package com.smart.tcp.handler.biz.event;
 
-import com.smart.biz.common.model.em.CmdEnum;
-import com.smart.server.service.ChannelService;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Component;
 
-import com.smart.tcp.codec.CodecObject;
+import com.smart.biz.common.model.Message;
+import com.smart.biz.common.model.em.CmdEnum;
+import com.smart.server.service.ChannelService;
 import com.smart.tcp.handler.biz.AbstractEvent;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.annotation.Resource;
 
 /**
  * @author chenjunlong
@@ -23,12 +23,22 @@ public class HeartBeatEvent extends AbstractEvent {
     private ChannelService channelService;
 
     @Override
-    public void execute(ChannelHandlerContext ctx, CodecObject codecObject) {
-        channelService.heartBeat(ctx, codecObject);
+    public void execute(ChannelHandlerContext ctx, Message message) {
 
-        CodecObject response = new CodecObject();
-        response.cmd = CmdEnum.HEART_BEAT.getCmdId();
-        response.seq = System.nanoTime();
-        ctx.writeAndFlush(response);
+        // 消息体解析
+        Message.Connect connect = Message.Connect.parseFromPb(message.getBody());
+
+
+        // 心跳上报
+        channelService.heartBeat(ctx, connect);
+
+
+        // 心跳应答
+        Message ack = Message.builder().build();
+        ack.setCmd(CmdEnum.HEART_BEAT.getCmdId());
+        ack.setSeq(System.nanoTime());
+
+
+        ctx.writeAndFlush(ack);
     }
 }

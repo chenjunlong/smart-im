@@ -1,4 +1,4 @@
-package com.smart.biz.udp;
+package com.smart.api.udpclient;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

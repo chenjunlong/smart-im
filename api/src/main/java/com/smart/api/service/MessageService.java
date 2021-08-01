@@ -1,4 +1,4 @@
-package com.smart.biz.service;
+package com.smart.api.service;
 
 import java.util.List;
 import java.util.Map;
@@ -7,16 +7,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Resource;
 
-import com.smart.biz.registry.RegistryProxy;
-import com.smart.biz.udp.UdpClient;
+import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Function;
+import com.smart.api.udpclient.UdpClient;
 import com.smart.biz.common.model.Comment;
 import com.smart.biz.common.model.Message;
+import com.smart.biz.common.model.Pair;
 import com.smart.biz.common.model.em.CmdEnum;
 import com.smart.biz.common.model.em.MsgTypeEnum;
 import com.smart.biz.dao.CommentDao;
+import com.smart.biz.registry.RegistryProxy;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,16 +50,23 @@ public class MessageService {
      * @return true 成功 false 失败
      */
     public boolean send(long senderId, String receiveId, int msgType, int cmd, String content) {
-        Message.Body body =
-                Message.Body.builder().senderId(senderId).receiveId(receiveId).msgType(msgType).content(content).timestamp(System.currentTimeMillis()).build();
-        String message = Message.builder().cmd(cmd).body(body).build().toJson();
+
+        long nowTimeMillis = System.currentTimeMillis();
+        Message.Body body = Message.Body.builder().senderId(senderId).receiveId(receiveId).msgType(msgType).content(content).timestamp(nowTimeMillis).build();
+        String message = Message.builder().cmd(cmd).seq(System.nanoTime()).body(body.toPbBytes()).build().toJson();
+
 
         List<String> addressList = udpRegistryProxy.getConnectAddress();
-        for (String address : addressList) {
-            String ip = address.split(":")[0];
-            int port = Integer.valueOf(address.split(":")[1]);
-            udpClient.send(message.getBytes(), ip, port);
-        }
+        addressList.stream().filter(StringUtils::isNotBlank).map(new Function<String, Pair<String, Integer>>() {
+            @Nullable
+            @Override
+            public Pair apply(@Nullable String address) {
+                String[] addressPort = address.split(":");
+                return new Pair<>(addressPort[0], Integer.parseInt(addressPort[1]));
+            }
+        }).forEach(pair -> udpClient.send(message.getBytes(), pair.getK(), pair.getV()));
+
+
         return true;
     }
 

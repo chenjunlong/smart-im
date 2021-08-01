@@ -20,6 +20,8 @@
         <module>service</module>
         <module>core</module>
         <module>benchmark</module>
+        <module>Protocol</module>
+        <module>protobuf</module>
     </modules>
 
     <properties>

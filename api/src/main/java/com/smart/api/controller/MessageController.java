@@ -15,8 +15,7 @@ import com.smart.api.exception.ApiException;
 import com.smart.api.exception.ExcepFactor;
 import com.smart.api.intercepter.auth.BaseInfo;
 import com.smart.biz.common.model.em.CmdEnum;
-import com.smart.biz.common.model.em.MsgTypeEnum;
-import com.smart.biz.service.MessageService;
+import com.smart.api.service.MessageService;
 
 import lombok.extern.slf4j.Slf4j;
 

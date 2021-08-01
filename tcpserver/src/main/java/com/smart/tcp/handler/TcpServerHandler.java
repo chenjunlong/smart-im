@@ -1,11 +1,11 @@
 package com.smart.tcp.handler;
 
+import com.smart.biz.common.model.Message;
 import com.smart.biz.common.model.em.CloseTypeEnum;
+import com.smart.biz.common.model.em.CmdEnum;
 import com.smart.server.service.ChannelService;
-import com.smart.tcp.codec.CodecObject;
 import com.smart.tcp.handler.biz.Event;
 import com.smart.tcp.handler.biz.EventStrategy;
-import com.smart.biz.common.model.em.CmdEnum;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -15,12 +15,12 @@ import lombok.extern.slf4j.Slf4j;
  * @author chenjunlong
  */
 @Slf4j
-public class BizProcessHandler extends SimpleChannelInboundHandler<Object> {
+public class TcpServerHandler extends SimpleChannelInboundHandler<Object> {
 
     private ChannelService channelService;
     private EventStrategy eventStrategy;
 
-    public BizProcessHandler(ChannelService channelService, EventStrategy eventStrategy) {
+    public TcpServerHandler(ChannelService channelService, EventStrategy eventStrategy) {
         this.channelService = channelService;
         this.eventStrategy = eventStrategy;
     }
@@ -63,18 +63,23 @@ public class BizProcessHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
+
         if (null == msg) {
             return;
         }
-        if (msg instanceof CodecObject) {
-            CodecObject codecObject = (CodecObject) msg;
-            int cmd = codecObject.cmd;
+
+        if (msg instanceof Message) {
+
+            Message message = (Message) msg;
+            int cmd = message.getCmd();
 
             Event event = eventStrategy.build(CmdEnum.valueOf(cmd).getEventName());
             if (null == event) {
                 throw new UnsupportedOperationException(String.format("cmd:%s Unsupported.", cmd));
             }
-            event.onEvent(ctx, codecObject);
+
+            event.onEvent(ctx, message);
         }
+
     }
 }

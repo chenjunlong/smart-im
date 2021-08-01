@@ -1,4 +1,4 @@
-package com.smart.biz.udp;
+package com.smart.api.udpclient;
 
 
 import java.net.InetSocketAddress;
@@ -28,10 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class UdpClient {
 
-
+    private int port = 7998;
     private Channel channel;
     private EventLoopGroup eventLoopGroup;
-
 
     @PostConstruct
     public void start() {
@@ -55,14 +54,14 @@ public class UdpClient {
             }
         });
         try {
-            channel = bootstrap.bind(7998).addListener((ChannelFutureListener) future -> {
+            channel = bootstrap.bind(port).addListener((ChannelFutureListener) future -> {
                 if (future.isSuccess()) {
-                    log.info("udpClient start success");
+                    log.info("[UdpClient] started success");
                 }
             }).sync().channel();
         } catch (Exception e) {
             eventLoopGroup.shutdownGracefully();
-            log.error("udpClient start failure", e);
+            log.error("[UdpClient] started failure", e);
         }
 
     }
@@ -78,7 +77,7 @@ public class UdpClient {
 
     @PreDestroy
     public void stop() {
-        log.info("UDPClient shut down");
+        log.info("[UdpClient] shutdown");
         eventLoopGroup.shutdownGracefully();
     }
 }

@@ -2,11 +2,11 @@ package com.smart.tcp.handler.biz.event;
 
 import javax.annotation.Resource;
 
+import com.smart.biz.common.model.Message;
 import org.springframework.stereotype.Component;
 
 import com.smart.biz.common.model.em.CloseTypeEnum;
 import com.smart.server.service.ChannelService;
-import com.smart.tcp.codec.CodecObject;
 import com.smart.tcp.handler.biz.AbstractEvent;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -23,7 +23,7 @@ public class ClosedEvent extends AbstractEvent {
     private ChannelService channelService;
 
     @Override
-    public void execute(ChannelHandlerContext ctx, CodecObject codecObject) {
+    public void execute(ChannelHandlerContext ctx, Message message) {
         channelService.disconnect(ctx, CloseTypeEnum.NORMAL.getType());
     }
 }

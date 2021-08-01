@@ -2,12 +2,12 @@ package com.smart.tcp.handler.biz.event;
 
 import javax.annotation.Resource;
 
-import com.smart.biz.common.model.em.CmdEnum;
-import com.smart.tcp.channel.ChannelRegistry;
 import org.springframework.stereotype.Component;
 
+import com.smart.biz.common.model.Message;
+import com.smart.biz.common.model.em.CmdEnum;
 import com.smart.server.service.ChannelService;
-import com.smart.tcp.codec.CodecObject;
+import com.smart.tcp.channel.ChannelRegistry;
 import com.smart.tcp.handler.biz.AbstractEvent;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -26,26 +26,34 @@ public class AuthEvent extends AbstractEvent {
     private ChannelService channelService;
 
     @Override
-    public void execute(ChannelHandlerContext ctx, CodecObject codecObject) {
+    public void execute(ChannelHandlerContext ctx, Message message) {
+
         // TCP连接限流
-        if (ChannelRegistry.getConnections() > MAX_CONNECTIONS) {
-            CodecObject response = new CodecObject();
-            response.cmd = CmdEnum.CONNECT_REFUSED_LIMIT.getCmdId();
-            response.seq = System.nanoTime();
-            ctx.writeAndFlush(response);
+        if (ChannelRegistry.getConnections() >= MAX_CONNECTIONS) {
+            Message ack = Message.builder().build();
+            ack.setCmd(CmdEnum.CONNECT_REFUSED_LIMIT.getCmdId());
+            ack.setSeq(System.nanoTime());
+            ctx.writeAndFlush(ack);
             return;
         }
 
 
-        // TODO: 权限认证
+        // 消息体解析
+        Message.Connect connect = Message.Connect.parseFromPb(message.getBody());
+
+
+        // 权限认证
 
 
         // 注册TCP连接
-        channelService.connect(ctx, codecObject);
+        channelService.connect(ctx, connect);
 
-        CodecObject response = new CodecObject();
-        response.cmd = CmdEnum.AUTH.getCmdId();
-        response.seq = System.nanoTime();
-        ctx.writeAndFlush(response);
+
+        // 连接成功应答
+        Message ack = Message.builder().build();
+        ack.setCmd(CmdEnum.AUTH.getCmdId());
+        ack.setSeq(System.nanoTime());
+        ctx.writeAndFlush(ack);
+
     }
 }

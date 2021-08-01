@@ -4,7 +4,10 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import com.smart.benchmark.netty.model.*;
+import com.smart.biz.common.model.Message;
+import com.smart.biz.common.model.em.CmdEnum;
+import com.smart.tcp.codec.SmartDecoder;
+import com.smart.tcp.codec.SmartEncoder;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -34,9 +37,11 @@ public class NettyClient {
     }
 
     public void start() throws Exception {
-        group = new NioEventLoopGroup();
 
+        group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
+
+
         b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) {
@@ -56,6 +61,7 @@ public class NettyClient {
                 group.shutdownGracefully();
             }
         });
+
     }
 
     public void stop() {
@@ -73,14 +79,17 @@ public class NettyClient {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
             int port = ((InetSocketAddress) ctx.channel().localAddress()).getPort();
-            CodecObject codecObject = (CodecObject) msg;
-            if (codecObject.cmd == 101) {
-                Message.Body body = Message.Body.parseFromPb(codecObject.body, Message.Body.class);
-                log.info(String.format("接受到server响应数据(%s), cmd:%s, body:%s", port, codecObject.cmd, body.toString()));
+
+            Message message = (Message) msg;
+            if (message.getCmd() == CmdEnum.COMMENT.getCmdId()) {
+                Message.Body body = Message.Body.parseFromPb(message.getBody());
+                log.info(String.format("接受到server响应数据(%s), cmd:%s, seq:%s, body:%s", port, message.getCmd(), message.getSeq(), body.toString()));
+            } else {
+                log.info(String.format("接受到server响应数据(%s), cmd:%s, seq:%s", port, message.getCmd(), message.getSeq()));
             }
         }
 
-        // 鉴权，开启心跳
+        // 发起连接，开启心跳
         @Override
         public void channelActive(ChannelHandlerContext ctx) {
             this.doConnect(ctx);
@@ -94,27 +103,35 @@ public class NettyClient {
         }
 
         private void doConnect(ChannelHandlerContext ctx) {
-            ConnectRequest connectRequest = new ConnectRequest();
-            connectRequest.setRoomId(roomId);
-            connectRequest.setUid(uid);
 
-            CodecObject connReq = new CodecObject();
-            connReq.cmd = 1;
-            connReq.seq = System.currentTimeMillis();
-            connReq.body = connectRequest.toPb();
-            ctx.writeAndFlush(connReq);
+            Message.Connect connect = Message.Connect.builder().build();
+            connect.setUid(uid);
+            connect.setRoomId(roomId);
+
+
+            Message message = Message.builder().build();
+            message.setCmd(CmdEnum.AUTH.getCmdId());
+            message.setSeq(System.nanoTime());
+            message.setBody(connect.toPbBytes());
+
+
+            ctx.writeAndFlush(message);
         }
 
         private void doHeartBeat(ChannelHandlerContext ctx) {
-            HeartBeatRequest heartBeatRequest = new HeartBeatRequest();
-            heartBeatRequest.setRoomId(roomId);
-            heartBeatRequest.setUid(uid);
 
-            CodecObject heartBeatReq = new CodecObject();
-            heartBeatReq.cmd = 0;
-            heartBeatReq.seq = System.currentTimeMillis();
-            heartBeatReq.body = heartBeatRequest.toPb();
-            ctx.writeAndFlush(heartBeatReq);
+            Message.Connect connect = Message.Connect.builder().build();
+            connect.setUid(uid);
+            connect.setRoomId(roomId);
+
+
+            Message message = Message.builder().build();
+            message.setCmd(CmdEnum.HEART_BEAT.getCmdId());
+            message.setSeq(System.nanoTime());
+            message.setBody(connect.toPbBytes());
+
+
+            ctx.writeAndFlush(message);
         }
     }
 

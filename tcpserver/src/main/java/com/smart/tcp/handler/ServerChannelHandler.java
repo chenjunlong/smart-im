@@ -30,7 +30,7 @@ public class ServerChannelHandler extends ChannelInitializer<SocketChannel> {
         ch.pipeline().addLast("connect_clear", new ServerIdleStateHandler(channelService));
         ch.pipeline().addLast("decoder", new SmartDecoder(Integer.MAX_VALUE, 0, 4, 0, 0, true));
         ch.pipeline().addLast("encoder", new SmartEncoder());
-        ch.pipeline().addLast("handler", new BizProcessHandler(channelService, eventStrategy));
+        ch.pipeline().addLast("handler", new TcpServerHandler(channelService, eventStrategy));
     }
 
 }

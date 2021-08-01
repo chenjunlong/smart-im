@@ -36,6 +36,7 @@ public class UdpServerHandler extends SimpleChannelInboundHandler<DatagramPacket
         log.info("[UdpServerHandler] msg:{}", receive);
 
         Message message = Message.parseFromJson(receive, Message.class);
+
         channelService.send(message);
     }
 }

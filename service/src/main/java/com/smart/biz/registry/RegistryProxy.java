@@ -1,5 +1,8 @@
 package com.smart.biz.registry;
 
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,9 @@ public class RegistryProxy implements Registry {
     @Override
     public List<String> getConnectAddress() {
         List<String> address = registry.getConnectAddress();
+        if (CollectionUtils.isEmpty(address)) {
+            return Collections.emptyList();
+        }
         return address;
     }
 

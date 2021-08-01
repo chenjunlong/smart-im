@@ -10,20 +10,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import com.smart.biz.common.kafka.Topic;
 import com.smart.biz.common.model.Message;
 import com.smart.biz.common.model.UserInOutMessage;
 import com.smart.biz.common.model.em.CmdEnum;
-import com.smart.server.model.ConnectRequest;
-import com.smart.server.model.HeartBeatRequest;
 import com.smart.tcp.channel.ChannelRegistry;
-import com.smart.tcp.codec.CodecObject;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StopWatch;
 
 /**
  * @author chenjunlong
@@ -42,12 +39,12 @@ public class ChannelService {
      * 注册TCP连接
      * 
      * @param ctx
-     * @param codecObject
+     * @param connect
      */
-    public void connect(ChannelHandlerContext ctx, CodecObject codecObject) {
-        ConnectRequest connectRequest = ConnectRequest.parseFromPb(codecObject.body, ConnectRequest.class);
-        String roomId = connectRequest.getRoomId();
-        Long uid = connectRequest.getUid();
+    public void connect(ChannelHandlerContext ctx, Message.Connect connect) {
+
+        long uid = connect.getUid();
+        String roomId = connect.getRoomId();
 
 
         // 注册连接
@@ -74,6 +71,7 @@ public class ChannelService {
      * @param closeType
      */
     public void disconnect(ChannelHandlerContext ctx, int closeType) {
+
         Channel channel = ctx.channel();
         String roomId = ChannelRegistry.ChannelAttribute.getRoomId(channel);
         Long uid = ChannelRegistry.ChannelAttribute.getUid(channel);
@@ -103,12 +101,12 @@ public class ChannelService {
      * 客户端心跳事件
      * 
      * @param ctx
-     * @param codecObject
+     * @param heartbeat
      */
-    public void heartBeat(ChannelHandlerContext ctx, CodecObject codecObject) {
-        HeartBeatRequest heartBeatRequest = HeartBeatRequest.parseFromPb(codecObject.body, HeartBeatRequest.class);
-        String roomId = heartBeatRequest.getRoomId();
-        Long uid = heartBeatRequest.getUid();
+    public void heartBeat(ChannelHandlerContext ctx, Message.Connect heartbeat) {
+
+        long uid = heartbeat.getUid();
+        String roomId = heartbeat.getRoomId();
 
 
         // 客户心跳开日志
@@ -124,24 +122,21 @@ public class ChannelService {
      * @param message
      */
     public void send(Message message) {
-        Message.Body body = message.getBody();
-        Set<Long> userSet = ChannelRegistry.getUids(body.getReceiveId(), body.getMsgType());
 
-        if (CollectionUtils.isEmpty(userSet)) {
+        // 消息体解析
+        Message.Body body = Message.Body.parseFromPb(message.getBody());
+
+
+        // 查找房间用户
+        Set<Long> uids = ChannelRegistry.getUids(body.getReceiveId(), body.getMsgType());
+        if (CollectionUtils.isEmpty(uids)) {
             return;
         }
 
         StopWatch sw = new StopWatch();
         sw.start("下推数据");
 
-        userSet.stream().filter(uid -> Objects.nonNull(ChannelRegistry.getChannelByUid(uid))).forEach(uid -> {
-            CodecObject codecObject = new CodecObject();
-            codecObject.cmd = message.getCmd();
-            codecObject.seq = System.nanoTime();
-            codecObject.body = body.toPb();
-
-            ChannelRegistry.getChannelByUid(uid).writeAndFlush(codecObject);
-        });
+        uids.stream().map(uid -> ChannelRegistry.getChannelByUid(uid)).filter(Objects::nonNull).forEach(channel -> channel.writeAndFlush(message));
 
         sw.stop();
 

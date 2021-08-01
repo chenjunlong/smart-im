@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_outer_classname = "MessageWrap";
+option java_package = "com.smart.biz.common.model.proto.wrap";
+
+message Body {
+  int64 senderId = 1;
+  string receiveId = 2;
+  int32 msgType = 3;
+  string content = 4;
+  int64 timestamp = 5;
+}
+
+message Connect{
+  int64 uid = 1;
+  string roomId = 2;
+}
