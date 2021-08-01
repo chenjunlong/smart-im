@@ -68,7 +68,7 @@ public class UdpClient {
 
 
     public void send(byte[] data, String ip, int port) {
-        ByteBuf buffer = channel.alloc().heapBuffer();
+        ByteBuf buffer = channel.alloc().directBuffer();
         buffer.writeBytes(data);
         DatagramPacket datagramPacket = new DatagramPacket(buffer, new InetSocketAddress(ip, port));
         channel.writeAndFlush(datagramPacket);

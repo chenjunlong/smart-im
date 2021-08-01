@@ -12,10 +12,11 @@ import lombok.*;
 @Builder
 public class Message extends BaseModel {
 
-    private int version = 1;
+    private int version;
     private int cmd;
     private long seq;
     private byte[] body;
+
 
     @Data
     @Builder

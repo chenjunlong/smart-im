@@ -10,9 +10,9 @@ if [[ ! -f ${PID_FILE} ]]; then
   exit 0
 fi
 
-echo -e "Stopping the api ...\c"
+echo -e "Stopping the benchmark ...\c"
 PID=$(cat "${PID_FILE}")
-cat ${PID_FILE} | xargs kill
+cat ${PID_FILE} | xargs kill -9
 
 COUNT=0
 while [[ ${COUNT} -lt 1 ]]; do

@@ -85,7 +85,7 @@ public class NettyClient {
                 Message.Body body = Message.Body.parseFromPb(message.getBody());
                 log.info(String.format("接受到server响应数据(%s), cmd:%s, seq:%s, body:%s", port, message.getCmd(), message.getSeq(), body.toString()));
             } else {
-                log.info(String.format("接受到server响应数据(%s), cmd:%s, seq:%s", port, message.getCmd(), message.getSeq()));
+                // log.info(String.format("接受到server响应数据(%s), cmd:%s, seq:%s", port, message.getCmd(), message.getSeq()));
             }
         }
 

@@ -112,7 +112,7 @@ public class ChannelService {
         // 客户心跳开日志
         String clientIp = ChannelRegistry.ChannelAttribute.getClientIp(ctx.channel());
         int port = ChannelRegistry.ChannelAttribute.getPort(ctx.channel());
-        log.info(String.format("[heart_beat %s:%s] roomId:%s, uid:%s", clientIp, port, roomId, uid));
+        // log.info(String.format("[heart_beat %s:%s] roomId:%s, uid:%s", clientIp, port, roomId, uid));
     }
 
 
@@ -134,13 +134,13 @@ public class ChannelService {
         }
 
         StopWatch sw = new StopWatch();
-        sw.start("下推数据");
+        sw.start("push_message");
 
-        uids.stream().map(uid -> ChannelRegistry.getChannelByUid(uid)).filter(Objects::nonNull).forEach(channel -> channel.writeAndFlush(message));
+        uids.parallelStream().map(uid -> ChannelRegistry.getChannelByUid(uid)).filter(Objects::nonNull).forEach(channel -> channel.writeAndFlush(message));
 
         sw.stop();
 
-        log.info(sw.prettyPrint());
+        log.info("push_message: {}", sw.toString());
     }
 
 

@@ -31,11 +31,12 @@ public class UdpServerHandler extends SimpleChannelInboundHandler<DatagramPacket
         int len = buf.readableBytes();
         byte[] data = new byte[len];
         buf.readBytes(data);
-        String receive = new String(data, "UTF-8");
 
-        log.info("[UdpServerHandler] msg:{}", receive);
 
-        Message message = Message.parseFromJson(receive, Message.class);
+        Message message = Message.parseFromJson(new String(data, "UTF-8"), Message.class);
+        Message.Body body = Message.Body.parseFromPb(message.getBody());
+        log.info("[UdpServerHandler] cmd:{}, seq:{}, body:{}", message.getCmd(), message.getSeq(), body.toJson());
+
 
         channelService.send(message);
     }
