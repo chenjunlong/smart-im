@@ -21,6 +21,7 @@
         <module>core</module>
         <module>benchmark</module>
         <module>protobuf</module>
+        <module>web</module>
     </modules>
 
     <properties>

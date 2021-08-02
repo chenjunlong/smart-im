@@ -33,9 +33,9 @@ JAVA_MEM_OPTS=" -server -Xmx1g -Xms1g -Xmn512m -XX:MaxMetaspaceSize=512m -Xss512
 echo -e "Starting the ${DEPLOY_DIR} ...\c"
 
 if [ "$MODE" = "docker" ]; then
-  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.api.GatewayApplication >$STDOUT_FILE
+  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.api.WebApplication >$STDOUT_FILE
 else
-  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.api.GatewayApplication >$STDOUT_FILE 2>&1 &
+  java $JAVA_OPTS $JAVA_MEM_OPTS -classpath $CONF_DIR:$LIB_JARS com.smart.api.WebApplication >$STDOUT_FILE 2>&1 &
 fi
 
 echo "$!" >"${PID_FILE}"

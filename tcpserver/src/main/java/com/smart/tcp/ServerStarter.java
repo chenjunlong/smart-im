@@ -45,7 +45,7 @@ public class ServerStarter implements ApplicationListener<ApplicationReadyEvent>
         UdpServer udpServer = new UdpServer(udpPort, udpRegistry, channelService);
         udpServer.start();
 
-        TcpServer tcpServer = new TcpServer(port, bossThreads, workerThreads, serverChannelHandler, tcpRegistry);
+        TcpServer tcpServer = new TcpServer(port, bossThreads, workerThreads, serverChannelHandler, tcpRegistry, channelService);
         tcpServer.start();
     }
 

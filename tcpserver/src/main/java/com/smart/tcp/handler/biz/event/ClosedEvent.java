@@ -24,6 +24,6 @@ public class ClosedEvent extends AbstractEvent {
 
     @Override
     public void execute(ChannelHandlerContext ctx, Message message) {
-        channelService.disconnect(ctx, CloseTypeEnum.NORMAL.getType());
+        channelService.disconnect(ctx.channel(), CloseTypeEnum.NORMAL.getType());
     }
 }

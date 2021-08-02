@@ -1,7 +1,9 @@
 package com.smart.tcp.channel;
 
 import java.net.InetSocketAddress;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -15,6 +17,7 @@ import com.smart.biz.common.model.em.MsgTypeEnum;
 
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
+import org.apache.commons.collections4.MapUtils;
 
 /**
  * @author chenjunlong
@@ -50,7 +53,6 @@ public class ChannelRegistry {
         ChannelAttribute.add(channel, roomId, uid);
         roomUser.put(roomId, uid);
         userChannel.put(uid, channel);
-        connections.incrementAndGet();
     }
 
     /**
@@ -61,13 +63,14 @@ public class ChannelRegistry {
      * @param channel 连接
      */
     public static void remove(String roomId, Long uid, Channel channel) {
+
         if (null == roomId || null == uid) {
             return;
         }
+
         ChannelAttribute.remove(channel);
         roomUser.remove(roomId, uid);
         userChannel.remove(uid, channel);
-        connections.decrementAndGet();
 
         channel.disconnect();
         channel.close();
@@ -120,12 +123,43 @@ public class ChannelRegistry {
     }
 
     /**
-     * 获取连接数
-     *
-     * @return
+     * 获取所有连接
+     * 
+     * @return 连接
      */
-    public static long getConnections() {
-        return connections.get();
+    public static List<Channel> getAllChannel() {
+        if (MapUtils.isEmpty(userChannel)) {
+            return Collections.emptyList();
+        }
+        return userChannel.values().stream().collect(Collectors.toList());
+    }
+
+
+    public static class Connection {
+
+        /**
+         * 获取连接数
+         *
+         * @return
+         */
+        public static long get() {
+            return connections.get();
+        }
+
+        /**
+         * 添加连接数
+         */
+        public static void increment() {
+            connections.incrementAndGet();
+        }
+
+        /**
+         * 减少连接数
+         */
+        public static void decrement() {
+            connections.decrementAndGet();
+        }
+
     }
 
     public static class ChannelAttribute {

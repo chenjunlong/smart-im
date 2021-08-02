@@ -1,11 +1,11 @@
 package com.smart.tcp;
 
+import com.smart.biz.common.model.em.CloseTypeEnum;
 import com.smart.server.common.constant.Constant;
+import com.smart.server.service.ChannelService;
+import com.smart.tcp.channel.ChannelRegistry;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * TcpServer：提供TCP端口服务
@@ -33,6 +35,7 @@ public class TcpServer {
     private final int workerThread;
     private final ChannelHandler channelHandler;
     private final TcpRegistry tcpRegistry;
+    private final ChannelService channelService;
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
@@ -40,12 +43,13 @@ public class TcpServer {
     private ChannelFuture channelFuture;
 
 
-    public TcpServer(int port, int bossThread, int workerThread, ChannelHandler channelHandler, TcpRegistry tcpRegistry) {
+    public TcpServer(int port, int bossThread, int workerThread, ChannelHandler channelHandler, TcpRegistry tcpRegistry, ChannelService channelService) {
         this.port = port;
         this.bossThread = bossThread;
         this.workerThread = workerThread;
         this.channelHandler = channelHandler;
         this.tcpRegistry = tcpRegistry;
+        this.channelService = channelService;
     }
 
     public synchronized void start() {
@@ -89,12 +93,8 @@ public class TcpServer {
         }
 
         this.serverBootstrap = new ServerBootstrap();
-        this.serverBootstrap.group(this.bossGroup, this.workerGroup)
-                .option(ChannelOption.SO_BACKLOG, 10240)
-                .option(ChannelOption.TCP_NODELAY, true)
-                .childOption(ChannelOption.SO_KEEPALIVE, true)
-                .childOption(ChannelOption.SO_REUSEADDR, true)
-                .childHandler(this.channelHandler);
+        this.serverBootstrap.group(this.bossGroup, this.workerGroup).option(ChannelOption.SO_BACKLOG, 10240).option(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true).childOption(ChannelOption.SO_REUSEADDR, true).childHandler(this.channelHandler);
 
         if (Epoll.isAvailable()) {
             this.serverBootstrap.channel(EpollServerSocketChannel.class);
@@ -108,12 +108,22 @@ public class TcpServer {
     class ShutdownThread extends Thread {
         @Override
         public void run() {
+
             // 取消注册
             try {
                 tcpRegistry.unregister();
             } catch (Exception e) {
                 log.error(String.format("[TcpServer] unregister failure %s", Constant.LOCAL_IP + ":" + port), e);
             }
+
+
+            // 通知客户端断开
+            try {
+                ChannelRegistry.getAllChannel().parallelStream().forEach(channel -> channelService.disconnect(channel, CloseTypeEnum.STOP_SERVER.getType()));
+            } catch (Exception e) {
+                log.error(String.format("[TcpServer] stop server notify client failure %s", Constant.LOCAL_IP + ":" + port), e);
+            }
+
 
             // 关闭线程组
             try {

@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author chenjunlong
  */
 @SpringBootApplication(scanBasePackages = {"com.smart.api", "com.smart.biz"})
-public class WebApplication {
+public class GatewayApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WebApplication.class, args);
+        SpringApplication.run(GatewayApplication.class, args);
     }
 }

@@ -4,6 +4,7 @@ import com.smart.biz.common.model.Message;
 import com.smart.biz.common.model.em.CloseTypeEnum;
 import com.smart.biz.common.model.em.CmdEnum;
 import com.smart.server.service.ChannelService;
+import com.smart.tcp.channel.ChannelRegistry;
 import com.smart.tcp.handler.biz.Event;
 import com.smart.tcp.handler.biz.EventStrategy;
 
@@ -32,7 +33,8 @@ public class TcpServerHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) {
-        channelService.disconnect(ctx, CloseTypeEnum.CLIENT.getType());
+        ChannelRegistry.Connection.decrement();
+        channelService.disconnect(ctx.channel(), CloseTypeEnum.NETWORK.getType());
     }
 
     /**
@@ -42,6 +44,7 @@ public class TcpServerHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        ChannelRegistry.Connection.increment();
         // log.info("channelActive");
     }
 

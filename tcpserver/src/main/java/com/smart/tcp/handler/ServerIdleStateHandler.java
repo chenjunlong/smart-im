@@ -38,7 +38,7 @@ public class ServerIdleStateHandler extends ChannelInboundHandlerAdapter {
 
 
                 // 断开连接
-                channelService.disconnect(ctx, CloseTypeEnum.HEART_BEAT_TIMEOUT.getType());
+                channelService.disconnect(ctx.channel(), CloseTypeEnum.HEART_BEAT_TIMEOUT.getType());
 
             }
         }

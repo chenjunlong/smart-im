@@ -67,12 +67,11 @@ public class ChannelService {
     /**
      * 断开TCP连接
      * 
-     * @param ctx
+     * @param channel
      * @param closeType
      */
-    public void disconnect(ChannelHandlerContext ctx, int closeType) {
+    public void disconnect(Channel channel, int closeType) {
 
-        Channel channel = ctx.channel();
         String roomId = ChannelRegistry.ChannelAttribute.getRoomId(channel);
         Long uid = ChannelRegistry.ChannelAttribute.getUid(channel);
         if (StringUtils.isBlank(roomId) && uid == 0L) {
@@ -91,8 +90,8 @@ public class ChannelService {
 
 
         // 客户端断开日志
-        String clientIp = ChannelRegistry.ChannelAttribute.getClientIp(ctx.channel());
-        int port = ChannelRegistry.ChannelAttribute.getPort(ctx.channel());
+        String clientIp = ChannelRegistry.ChannelAttribute.getClientIp(channel);
+        int port = ChannelRegistry.ChannelAttribute.getPort(channel);
         log.info(String.format("[ChannelService %s:%s disconnect]  roomId:%s, uid:%s exit, closeType:%s", clientIp, port, roomId, uid, closeType));
     }
 
