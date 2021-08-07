@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author chenjunlong
- * @desc TcpServer节点地址调度
+ * @desc TcpServer地址调度
  */
 @Slf4j
 @RestController
@@ -38,6 +38,17 @@ public class DispatchController {
     @GetMapping(value = "/connect_address", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> connectAddress() {
         return dispatchService.getAddress();
+    }
+
+    /**
+     * curl 'http://localhost:8000/v1/smart-im/dispatch/ws_address'
+     */
+    @RequestLog
+    @ResponseLog
+    @BaseInfo(desc = "获取Ws服务地址，返回节点地址List首个元素为主节点优先连接，其余为备份", needAuth = true, rateLimit = 500)
+    @GetMapping(value = "/ws_address", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<String> wsAddress() {
+        return dispatchService.getWsAddress();
     }
 
 }

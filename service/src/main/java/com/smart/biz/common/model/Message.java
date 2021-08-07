@@ -139,4 +139,13 @@ public class Message extends BaseModel {
         }
     }
 
+    @Data
+    @Builder
+    @ToString
+    @EqualsAndHashCode
+    public static class TextFrame extends BaseModel {
+        private int cmd;
+        private Object body;
+    }
+
 }

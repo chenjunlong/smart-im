@@ -1,12 +1,11 @@
-package com.smart.tcp.handler.biz;
+package com.smart.server.event.base;
 
-import com.smart.biz.common.model.Message;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
  * @author chenjunlong
  */
-public interface Event {
+public interface Event<T> {
 
     /**
      * 事件处理器
@@ -14,6 +13,6 @@ public interface Event {
      * @param ctx
      * @param message
      */
-    void onEvent(ChannelHandlerContext ctx, Message message);
+    void onEvent(ChannelHandlerContext ctx, T message);
 
 }

@@ -153,9 +153,6 @@ public class NettyClient {
     }
 
     public static void main(String[] args) throws Exception {
-        // for (int i = 0; i < 200; i++) {
-        //
-        // }
 
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         String response = restTemplate.getForObject("http://localhost:8000/v1/smart-im/dispatch/connect_address", String.class);

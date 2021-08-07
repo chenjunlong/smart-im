@@ -1,4 +1,4 @@
-package com.smart.tcp.handler.biz.event;
+package com.smart.tcp.handler.event;
 
 import javax.annotation.Resource;
 
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.smart.biz.common.model.Message;
 import com.smart.biz.common.model.em.CmdEnum;
 import com.smart.server.service.ChannelService;
-import com.smart.tcp.handler.biz.AbstractEvent;
+import com.smart.server.event.base.AbstractEvent;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Component("heartBeatEvent")
-public class HeartBeatEvent extends AbstractEvent {
+public class HeartBeatEvent extends AbstractEvent<Message> {
 
     @Resource
     private ChannelService channelService;

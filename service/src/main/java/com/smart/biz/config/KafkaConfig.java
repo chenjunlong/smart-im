@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.Properties;
 
@@ -23,6 +24,7 @@ public class KafkaConfig {
     private String smartImBootstrapServer;
 
     @Bean
+    @Lazy
     public Properties smartImKafkaProducerConfig() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, this.smartImBootstrapServer);
@@ -39,6 +41,7 @@ public class KafkaConfig {
     }
 
     @Bean
+    @Lazy
     public KafkaProducer<String, String> smartImKafkaProducer(@Qualifier("smartImKafkaProducerConfig") Properties props) {
         return new KafkaProducer(props);
     }

@@ -30,6 +30,7 @@ public class UdpServer {
 
     private final String host;
     private final int port;
+    private final int mode;
 
     private EventLoopGroup workerGroup;
     private Bootstrap bootstrap;
@@ -38,9 +39,10 @@ public class UdpServer {
     private ChannelService channelService;
 
 
-    public UdpServer(int port, UdpRegistry udpRegistry, ChannelService channelService) {
+    public UdpServer(int port, UdpRegistry udpRegistry, ChannelService channelService, int mode) {
         this.host = Constant.LOCAL_IP;
         this.port = port;
+        this.mode = mode;
         this.udpRegistry = udpRegistry;
         this.channelService = channelService;
     }
@@ -62,7 +64,7 @@ public class UdpServer {
                 .handler(new ChannelInitializer<DatagramChannel>() {
             @Override
             protected void initChannel(DatagramChannel ch) {
-                ch.pipeline().addLast(new UdpServerHandler(channelService));
+                ch.pipeline().addLast(new UdpServerHandler(channelService, mode));
             }
         });
 

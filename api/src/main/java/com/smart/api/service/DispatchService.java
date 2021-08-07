@@ -16,13 +16,21 @@ import com.smart.api.address.LoadBalanceStrategy;
 public class DispatchService {
 
     @Resource(name = "tcpRegistryProxy")
-    private RegistryProxy registryProxy;
+    private RegistryProxy tcpRegistryProxy;
+    @Resource(name = "wsRegistryProxy")
+    private RegistryProxy wsRegistryProxy;
     @Resource
     private LoadBalanceStrategy loadBalanceStrategy;
 
 
     public List<String> getAddress() {
-        List<String> address = registryProxy.getConnectAddress();
+        List<String> address = tcpRegistryProxy.getConnectAddress();
         return loadBalanceStrategy.getLoadBalance().select(address);
     }
+
+    public List<String> getWsAddress() {
+        List<String> address = wsRegistryProxy.getConnectAddress();
+        return loadBalanceStrategy.getLoadBalance().select(address);
+    }
+
 }

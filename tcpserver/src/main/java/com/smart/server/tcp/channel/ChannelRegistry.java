@@ -1,4 +1,4 @@
-package com.smart.tcp.channel;
+package com.smart.server.tcp.channel;
 
 import java.net.InetSocketAddress;
 import java.util.Collections;

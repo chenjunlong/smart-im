@@ -1,16 +1,18 @@
-package com.smart.tcp;
+package com.smart.ws;
 
 import javax.annotation.Resource;
 
+import com.smart.server.common.constant.Constant;
+import com.smart.ws.handler.WsServerChannelHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import com.smart.server.service.ChannelService;
+import com.smart.server.tcp.register.ServerRegistry;
 import com.smart.server.udp.UdpRegistry;
 import com.smart.server.udp.UdpServer;
-import com.smart.tcp.handler.ServerChannelHandler;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,34 +21,36 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Component
-public class ServerStarter implements ApplicationListener<ApplicationReadyEvent> {
+public class WsServerStarer implements ApplicationListener<ApplicationReadyEvent> {
 
-    @Value("${tcpserver.port}")
+    @Value("${wsserver.port}")
     private int port;
-    @Value("${tcpserver.boss-threads}")
+    @Value("${wsserver.boss-threads}")
     private int bossThreads;
-    @Value("${tcpserver.worker-threads}")
+    @Value("${wsserver.worker-threads}")
     private int workerThreads;
     @Value("${udpserver.port}")
     private int udpPort;
 
     @Resource
-    private ServerChannelHandler serverChannelHandler;
-    @Resource
-    private TcpRegistry tcpRegistry;
-    @Resource
     private UdpRegistry udpRegistry;
     @Resource
     private ChannelService channelService;
+    @Resource(name = "wsServerRegistry")
+    private ServerRegistry serverRegistry;
+    @Resource
+    private WsServerChannelHandler wsServerChannelHandler;
 
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        UdpServer udpServer = new UdpServer(udpPort, udpRegistry, channelService);
+
+        UdpServer udpServer = new UdpServer(udpPort, udpRegistry, channelService, Constant.MODE_WEBSOCKET);
         udpServer.start();
 
-        TcpServer tcpServer = new TcpServer(port, bossThreads, workerThreads, serverChannelHandler, tcpRegistry, channelService);
-        tcpServer.start();
+        WsServer wsServer = new WsServer(port, bossThreads, workerThreads, wsServerChannelHandler, serverRegistry, channelService);
+        wsServer.start();
+
     }
 
 }

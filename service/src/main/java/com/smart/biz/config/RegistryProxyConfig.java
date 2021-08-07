@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.smart.biz.registry.RegistryProxy;
 import com.smart.biz.registry.impl.ZKRegistry;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * @author chenjunlong
@@ -20,18 +21,21 @@ public class RegistryProxyConfig {
 
 
     @Bean
+    @Lazy
     public RegistryProxy tcpRegistryProxy(@Qualifier("smartImZkClient") ZkClient zkClient) {
         ZKRegistry zkRegistry = new ZKRegistry(TCP_SERVER_REGISTER_ROOT_PATH, zkClient);
         return new RegistryProxy(zkRegistry);
     }
 
     @Bean
+    @Lazy
     public RegistryProxy wsRegistryProxy(@Qualifier("smartImZkClient") ZkClient zkClient) {
         ZKRegistry zkRegistry = new ZKRegistry(WS_SERVER_REGISTER_ROOT_PATH, zkClient);
         return new RegistryProxy(zkRegistry);
     }
 
     @Bean
+    @Lazy
     public RegistryProxy udpRegistryProxy(@Qualifier("smartImZkClient") ZkClient zkClient) {
         ZKRegistry zkRegistry = new ZKRegistry(UDP_SERVER_REGISTER_ROOT_PATH, zkClient);
         return new RegistryProxy(zkRegistry);

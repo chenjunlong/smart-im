@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -16,7 +17,7 @@ import com.smart.biz.common.kafka.Topic;
 import com.smart.biz.common.model.Message;
 import com.smart.biz.common.model.UserInOutMessage;
 import com.smart.biz.common.model.em.CmdEnum;
-import com.smart.tcp.channel.ChannelRegistry;
+import com.smart.server.tcp.channel.ChannelRegistry;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -111,7 +112,8 @@ public class ChannelService {
         // 客户心跳开日志
         String clientIp = ChannelRegistry.ChannelAttribute.getClientIp(ctx.channel());
         int port = ChannelRegistry.ChannelAttribute.getPort(ctx.channel());
-        // log.info(String.format("[heart_beat %s:%s] roomId:%s, uid:%s", clientIp, port, roomId, uid));
+        // log.info(String.format("[heart_beat %s:%s] roomId:%s, uid:%s", clientIp, port, roomId,
+        // uid));
     }
 
 
@@ -142,6 +144,31 @@ public class ChannelService {
         log.info("push_message: {}", sw.toString());
     }
 
+    public void sendWebSocket(Message message) {
+
+        // 消息体解析
+        Message.Body body = Message.Body.parseFromPb(message.getBody());
+
+
+        // 查找房间用户
+        Set<Long> uids = ChannelRegistry.getUids(body.getReceiveId(), body.getMsgType());
+        if (CollectionUtils.isEmpty(uids)) {
+            return;
+        }
+
+        StopWatch sw = new StopWatch();
+        sw.start("push_message_web_socket");
+
+        String textFrameJson = Message.TextFrame.builder().cmd(message.getCmd()).body(body.toJson()).build().toJson();
+        uids.parallelStream().map(uid -> ChannelRegistry.getChannelByUid(uid)).filter(Objects::nonNull)
+                .forEach(channel -> channel.writeAndFlush(new TextWebSocketFrame(textFrameJson)));
+
+        sw.stop();
+
+        log.info("push_message_web_socket: {}", sw.toString());
+
+    }
+
 
     /**
      * 用户进出场事件消息
@@ -152,4 +179,5 @@ public class ChannelService {
         String json = userInOutMessage.toJson();
         smartImKafkaProducer.send(new ProducerRecord(Topic.SMART_IM_MESSAGE_INOUT, json));
     }
+
 }

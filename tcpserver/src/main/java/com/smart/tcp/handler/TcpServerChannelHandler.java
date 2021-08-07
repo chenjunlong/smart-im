@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.smart.server.service.ChannelService;
 import com.smart.tcp.codec.SmartDecoder;
 import com.smart.tcp.codec.SmartEncoder;
-import com.smart.tcp.handler.biz.EventStrategy;
+import com.smart.server.event.EventStrategy;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
@@ -17,7 +17,7 @@ import io.netty.handler.timeout.IdleStateHandler;
  * @author chenjunlong
  */
 @Component
-public class ServerChannelHandler extends ChannelInitializer<SocketChannel> {
+public class TcpServerChannelHandler extends ChannelInitializer<SocketChannel> {
 
     @Resource
     private ChannelService channelService;

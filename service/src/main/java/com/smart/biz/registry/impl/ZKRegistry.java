@@ -2,6 +2,9 @@ package com.smart.biz.registry.impl;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.I0Itec.zkclient.IZkChildListener;
@@ -68,6 +71,9 @@ public class ZKRegistry extends AbstractRegistry {
     @Override
     public List<String> getConnectAddress() {
         return localRegistryMap.keySet().stream().collect(Collectors.toList());
+//        long currentTimeMillis = System.currentTimeMillis();
+//        return localRegistryMap.entrySet().stream().filter(e -> (currentTimeMillis - e.getValue()) < TimeUnit.MINUTES.toMillis(5))
+//                .map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
     @Override

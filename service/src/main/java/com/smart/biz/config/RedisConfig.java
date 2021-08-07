@@ -10,6 +10,7 @@ import com.smart.data.redis.RedisTemplate;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -32,11 +33,13 @@ public class RedisConfig {
     private int timeout;
 
     @Bean
+    @Lazy
     public JedisPool smartImJedisPool() {
         return new JedisPool(jedisPoolConfig, host, port, timeout);
     }
 
     @Bean
+    @Lazy
     public RedisTemplate smartImRedisTemplate(@Qualifier("smartImJedisPool") JedisPool jedisPool) {
         return new RedisTemplate(jedisPool);
     }

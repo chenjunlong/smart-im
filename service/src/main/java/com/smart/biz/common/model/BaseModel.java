@@ -20,4 +20,8 @@ public abstract class BaseModel {
         return (T) gson.fromJson(value, clazz);
     }
 
+    public static String toJson(Object value) {
+        return gson.toJson(value);
+    }
+
 }

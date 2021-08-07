@@ -1,6 +1,7 @@
 package com.smart.server.udp.handler;
 
 import com.smart.biz.common.model.Message;
+import com.smart.server.common.constant.Constant;
 import com.smart.server.service.ChannelService;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,9 +18,11 @@ import java.io.UnsupportedEncodingException;
 @Slf4j
 public class UdpServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
+    private final int mode;
     private ChannelService channelService;
 
-    public UdpServerHandler(ChannelService channelService) {
+    public UdpServerHandler(ChannelService channelService, int mode) {
+        this.mode = mode;
         this.channelService = channelService;
     }
 
@@ -38,6 +41,13 @@ public class UdpServerHandler extends SimpleChannelInboundHandler<DatagramPacket
         log.info("[UdpServerHandler] cmd:{}, seq:{}, body:{}", message.getCmd(), message.getSeq(), body.toJson());
 
 
-        channelService.send(message);
+        if (mode == Constant.MODE_TCP) {
+            channelService.send(message);
+        }
+
+        if(mode == Constant.MODE_WEBSOCKET) {
+            channelService.sendWebSocket(message);
+        }
+
     }
 }
